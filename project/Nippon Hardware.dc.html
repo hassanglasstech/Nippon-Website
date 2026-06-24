@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#2D2D2D;background:#FFFFFF;-webkit-font-smoothing:antialiased;letter-spacing:-0.003em;}
+  ::selection{background:#E2001A;color:#fff;}
+  button{font-family:inherit;cursor:pointer;transition:background .12s ease,color .12s ease,border-color .12s ease,box-shadow .12s ease,opacity .12s ease,transform .06s ease;}
+  button:active{transform:translateY(0.5px);}
+  input,select{font-family:inherit;transition:border-color .12s ease,box-shadow .12s ease;}
+  image-slot{display:block;}
+  *:focus-visible{outline:2px solid #E2001A;outline-offset:1px;}
+  input:focus-visible,select:focus-visible{outline:none;}
+  @keyframes nh-fade{from{opacity:0}to{opacity:1}}
+  @keyframes nh-rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes nh-mega{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes nh-toast{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes nh-pop{from{opacity:0;transform:translate(-50%,-50%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+  @keyframes nh-slidein{from{transform:translateX(100%)}to{transform:translateX(0)}}
+  @keyframes nh-pulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .nh-screen{}
+  .nh-mega{animation:nh-mega .16s ease;}
+  .nh-toast{animation:nh-toast .3s cubic-bezier(.2,.8,.2,1);}
+  .nh-pop{animation:nh-pop .2s cubic-bezier(.2,.8,.2,1);}
+  .nh-drawer{animation:nh-slidein .28s cubic-bezier(.2,.8,.2,1);}
+  .nh-zoomwrap{overflow:hidden;cursor:zoom-in;}
+  .nh-zoomwrap image-slot{transition:transform .4s ease;}
+  .nh-zoomwrap:hover image-slot{transform:scale(1.7);}
+  @media(max-width:1080px){
+    .nh-2col,.nh-prod,.nh-plp{grid-template-columns:1fr !important;}
+    .nh-grid-4,.nh-grid-3{grid-template-columns:repeat(2,1fr) !important;}
+    .nh-mega-grid{grid-template-columns:1fr !important;gap:20px !important;}
+    .nh-foot{grid-template-columns:repeat(2,1fr) !important;}
+    .nh-prod-gallery{position:static !important;}
+  }
+  @media(max-width:680px){
+    .nh-grid-4,.nh-grid-3,.nh-foot{grid-template-columns:1fr !important;}
+    .nh-mainbar{flex-wrap:wrap !important;height:auto !important;padding-top:12px !important;padding-bottom:12px !important;gap:12px !important;}
+    .nh-search{max-width:none !important;order:3;flex-basis:100% !important;}
+    .nh-util{display:none !important;}
+    .nh-h1{font-size:32px !important;}
+    .nh-keyspec{grid-template-columns:1fr !important;}
+    .nh-sticky-inner{flex-wrap:wrap !important;gap:10px !important;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .nh-screen,.nh-mega,.nh-toast,.nh-pop,.nh-drawer{animation:none !important;}
+    .nh-zoomwrap:hover image-slot{transform:none !important;}
+  }
+</style>
+</helmet>
+<div style="min-height:100vh;background:#FFFFFF;">
+  <!-- ===== HEADER ===== -->
+  <header style="position:sticky;top:0;z-index:40;background:#FFFFFF;border-bottom:1px solid #D8D8D8;">
+    <div style="height:4px;background:#E2001A;"></div>
+    <!-- utility bar -->
+    <div style="background:#F4F5F7;color:#6B7177;border-bottom:1px solid #D8D8D8;">
+      <div style="max-width:1280px;margin:0 auto;padding:0 32px;height:30px;display:flex;align-items:center;justify-content:space-between;font-size:11.5px;letter-spacing:.04em;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">AUTHORISED KINLONG DISTRIBUTOR</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:24px;">
+          <sc-for list="{{ utilityNav }}" as="u" hint-placeholder-count="4">
+            <button onClick="{{ u.onClick }}" style="background:none;border:none;color:#6B7177;font-size:11.5px;letter-spacing:.04em;padding:0;" style-hover="{{ utilHover }}">{{ u.label }}</button>
+          </sc-for>
+          <span style="width:1px;height:14px;background:#D8D8D8;"></span>
+          <div class="nh-util" style="display:flex;align-items:center;gap:18px;">
+            <sc-for list="{{ utilityIcons }}" as="ui" hint-placeholder-count="3">
+              <button onClick="{{ ui.onClick }}" style="background:none;border:none;color:#6B7177;font-size:11.5px;letter-spacing:.03em;padding:0;display:flex;align-items:center;gap:6px;" style-hover="{{ utilHover }}"><span style="display:flex;" dangerouslySetInnerHTML="{{ ui.icon }}"></span>{{ ui.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- main bar -->
+    <div class="nh-mainbar" style="max-width:1280px;margin:0 auto;padding:0 32px;height:58px;display:flex;align-items:center;gap:32px;">
+      <button onClick="{{ goHome }}" style="background:none;border:none;padding:0;display:flex;align-items:baseline;gap:10px;">
+        <span style="font-size:18px;font-weight:700;letter-spacing:-.02em;color:#E2001A;">NIPPON</span>
+        <span style="font-size:18px;font-weight:400;letter-spacing:.32em;color:#6B7177;">HARDWARE</span>
+      </button>
+      <!-- search -->
+      <div class="nh-search" style="flex:1;max-width:560px;position:relative;">
+        <div style="display:flex;">
+          <input value="{{ searchQuery }}" onInput="{{ onSearch }}" onFocus="{{ onSearchFocus }}" onBlur="{{ onSearchBlur }}" placeholder="Search article number or keyword — e.g. MZS3208C, friction stay" style="flex:1;height:40px;padding:0 14px;border:1px solid #C4C4C4;border-right:none;border-radius:2px 0 0 2px;font-size:14px;outline:none;color:#2D2D2D;" style-focus="{{ searchFocus }}">
+          <button onClick="{{ goPlp }}" aria-label="Search" style="width:48px;height:40px;background:#16181A;border:none;border-radius:0 2px 2px 0;display:flex;align-items:center;justify-content:center;color:#fff;" style-hover="{{ searchBtnHover }}">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+          </button>
+        </div>
+        <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid #D8D8D8;border-radius:2px;box-shadow:0 6px 18px rgba(22,24,26,.12);z-index:55;overflow:hidden;">
+            <div style="padding:9px 14px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#6B7177;border-bottom:1px solid #E8EAED;background:#F8F9FB;">{{ searchHeading }}</div>
+            <sc-for list="{{ searchResults }}" as="r" hint-placeholder-count="5">
+              <button onMouseDown="{{ r.onClick }}" style="width:100%;text-align:left;display:flex;align-items:center;gap:12px;padding:10px 14px;background:#fff;border:none;border-bottom:1px solid #E8EAED;" style-hover="{{ searchRowHover }}">
+                <span style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:12px;color:#E2001A;min-width:96px;">{{ r.code }}</span>
+                <span style="flex:1;font-size:13px;color:#2D2D2D;">{{ r.name }}</span>
+                <span style="font-size:11px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;white-space:nowrap;">{{ r.group }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+        <button onClick="{{ toggleBasket }}" style="position:relative;height:40px;padding:0 18px 0 16px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.02em;display:flex;align-items:center;gap:10px;" style-hover="{{ redBtnHover }}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16l-1.5 10.5a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7L4 6Z"/><path d="M8 6V5a4 4 0 0 1 8 0v1"/></svg>
+          ENQUIRY
+          <span style="min-width:20px;height:20px;padding:0 5px;border-radius:2px;background:#fff;color:#E2001A;font-size:11px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">{{ basketCount }}</span>
+        </button>
+      </div>
+    </div>
+    <!-- category nav -->
+    <nav style="border-top:1px solid #D8D8D8;background:#FFFFFF;position:relative;" onMouseLeave="{{ navLeaveSoon }}">
+      <div style="max-width:1280px;margin:0 auto;padding:0 32px;display:flex;align-items:stretch;height:40px;overflow:hidden;">
+        <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="8">
+          <button onClick="{{ g.onClick }}" onMouseEnter="{{ g.onEnter }}" style="position:relative;background:none;border:none;border-right:1px solid #D8D8D8;padding:0 16px;height:100%;font-size:12.5px;font-weight:500;letter-spacing:.01em;color:#2A2D30;white-space:nowrap;display:flex;align-items:center;" style-hover="{{ navHover }}">{{ g.label }}
+            <sc-if value="{{ g.active }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:0;right:0;bottom:0;height:3px;background:#E2001A;"></span></sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ megaOpen }}" hint-placeholder-val="{{ false }}">
+        <div class="nh-mega" onMouseEnter="{{ keepMega }}" onMouseLeave="{{ closeMega }}" style="position:absolute;top:100%;left:0;right:0;background:#fff;border-top:1px solid #D8D8D8;border-bottom:1px solid #D8D8D8;box-shadow:0 1px 2px rgba(22,24,26,.06);z-index:45;">
+          <div class="nh-mega-grid" style="max-width:1280px;margin:0 auto;padding:28px 32px 30px;display:grid;grid-template-columns:230px 1fr 248px;gap:40px;">
+            <div style="border-right:1px solid #D8D8D8;padding-right:24px;">
+              <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#E2001A;margin-bottom:12px;">{{ hoveredGroup }}</div>
+              <button onClick="{{ goPlp }}" style="background:none;border:none;padding:0;color:#2D2D2D;font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;" style-hover="{{ linkHover }}">View all products
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14,6 20,12 14,18"/></svg>
+              </button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0 28px;align-content:start;">
+              <sc-for list="{{ hoveredSubs }}" as="sub" hint-placeholder-count="6">
+                <button onClick="{{ sub.onClick }}" style="text-align:left;background:none;border:none;padding:9px 0;font-size:13.5px;color:#2A2D30;border-bottom:1px solid #E8EAED;" style-hover="{{ linkHover }}">{{ sub.label }}</button>
+              </sc-for>
+            </div>
+            <button onClick="{{ goProduct }}" style="text-align:left;background:#F4F5F7;border:1px solid #D8D8D8;border-radius:2px;padding:16px;display:flex;flex-direction:column;gap:10px;cursor:pointer;" style-hover="{{ codeHover }}">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#fff;background:#E2001A;padding:3px 7px;border-radius:2px;">New</span>
+                <span style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:11px;color:#6B7177;">MZS3208C</span>
+              </div>
+              <image-slot id="nh-mega-promo" style="width:100%;height:96px;" shape="rect" fit="contain" placeholder="Featured"></image-slot>
+              <div style="font-size:13px;font-weight:600;color:#2D2D2D;line-height:1.3;">Mortise Lever Handle Set</div>
+            </button>
+          </div>
+        </div>
+      </sc-if>
+    </nav>
+  </header>
+
+  <!-- ===== SCREENS ===== -->
+  <main>
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <div class="nh-screen">
+      <!-- HERO -->
+      <section style="border-bottom:1px solid #D8D8D8;background:#F4F5F7;">
+        <div class="nh-2col" style="max-width:1280px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:1.05fr .95fr;min-height:360px;">
+          <div style="padding:52px 56px 52px 0;display:flex;flex-direction:column;justify-content:center;">
+            <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#E2001A;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:22px;">KinLong Architectural Hardware</div>
+            <h1 class="nh-h1" style="font-size:38px;line-height:1.05;font-weight:600;letter-spacing:-.025em;margin:0 0 22px;color:#2D2D2D;max-width:18ch;">Engineered fittings, specified with confidence.</h1>
+            <p style="font-size:14px;line-height:1.6;color:#6B7177;margin:0 0 30px;max-width:46ch;">Search the full KinLong catalogue by article number. Load ratings, certifications, CAD and datasheets — built for architects, fabricators and dealers.</p>
+            <div style="display:flex;gap:12px;align-items:stretch;max-width:560px;">
+              <div style="flex:1;position:relative;">
+                <input value="{{ searchQuery }}" onInput="{{ onSearch }}" placeholder="Article number or keyword" style="width:100%;height:44px;padding:0 16px;border:1px solid #C4C4C4;border-radius:2px;font-size:15px;outline:none;background:#fff;" style-focus="{{ searchFocus }}">
+              </div>
+              <button onClick="{{ goPlp }}" style="height:44px;padding:0 26px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">Search</button>
+            </div>
+            <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">
+              <span style="font-size:11px;color:#6B7177;letter-spacing:.04em;padding-top:4px;">QUICK:</span>
+              <sc-for list="{{ quickCodes }}" as="c" hint-placeholder-count="4">
+                <button onClick="{{ c.onClick }}" style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:11.5px;color:#2A2D30;background:#fff;border:1px solid #D8D8D8;border-radius:2px;padding:4px 9px;letter-spacing:.02em;" style-hover="{{ codeHover }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <!-- signature product -->
+          <div style="position:relative;border-left:1px solid #D8D8D8;background:#fff;display:flex;align-items:center;justify-content:center;padding:40px;overflow:hidden;">
+            <div style="position:absolute;inset:0;background-image:radial-gradient(#E8EAED 1px,transparent 1px);background-size:22px 22px;opacity:.7;"></div>
+            <div style="position:absolute;top:20px;right:20px;width:14px;height:14px;border-top:1.5px solid #C4C4C4;border-right:1.5px solid #C4C4C4;"></div>
+            <div style="position:absolute;bottom:20px;right:20px;width:14px;height:14px;border-bottom:1.5px solid #C4C4C4;border-right:1.5px solid #C4C4C4;"></div>
+            <div style="position:absolute;top:24px;left:24px;z-index:2;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:11px;color:#6B7177;letter-spacing:.06em;">SIGNATURE · MZS3208C</div>
+            <image-slot id="nh-hero" style="width:100%;height:300px;position:relative;z-index:1;" shape="rect" fit="contain" placeholder="Drop signature product shot (MZS3208C)"></image-slot>
+            <div style="position:absolute;bottom:24px;left:24px;z-index:2;display:flex;gap:6px;">
+              <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6B7177;border:1px solid #D8D8D8;background:#fff;border-radius:2px;padding:3px 7px;">SUS 304</span>
+              <span style="font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#6B7177;border:1px solid #D8D8D8;background:#fff;border-radius:2px;padding:3px 7px;">EN 1906</span>
+            </div>
+            <button onClick="{{ goProduct }}" style="position:absolute;bottom:24px;right:24px;z-index:2;background:#16181A;color:#fff;border:none;border-radius:2px;height:40px;padding:0 18px;font-size:12px;font-weight:500;letter-spacing:.03em;display:flex;align-items:center;gap:8px;" style-hover="{{ outlineDarkHover }}">View product
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14,6 20,12 14,18"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICE PROMISES -->
+      <section style="border-bottom:1px solid #D8D8D8;background:#FFFFFF;">
+        <div class="nh-grid-4" style="max-width:1280px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:repeat(4,1fr);">
+          <sc-for list="{{ servicePromises }}" as="s" hint-placeholder-count="4">
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:22px 28px 22px 0;border-right:1px solid #D8D8D8;">
+              <span style="color:#2D2D2D;flex:none;margin-top:1px;" dangerouslySetInnerHTML="{{ s.icon }}"></span>
+              <div>
+                <div style="font-size:13.5px;font-weight:600;color:#2D2D2D;letter-spacing:-.01em;margin-bottom:3px;">{{ s.title }}</div>
+                <div style="font-size:12px;line-height:1.5;color:#6B7177;">{{ s.body }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- CATEGORY TILES -->
+      <section style="max-width:1280px;margin:0 auto;padding:48px 32px 0;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;">
+          <h2 style="font-size:18px;letter-spacing:-.01em;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-weight:600;color:#2D2D2D;margin:0;">Browse by function</h2>
+          <span style="font-size:12px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">8 GROUPS · 152 SKUS</span>
+        </div>
+        <div class="nh-grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #D8D8D8;border-left:1px solid #D8D8D8;">
+          <sc-for list="{{ categoryTiles }}" as="t" hint-placeholder-count="8">
+            <button onClick="{{ t.onClick }}" style="text-align:left;background:#fff;border:none;border-right:1px solid #D8D8D8;border-bottom:1px solid #D8D8D8;padding:16px 18px 16px;min-height:116px;display:flex;flex-direction:column;justify-content:space-between;" style-hover="{{ tileHover }}">
+              <div style="color:#2A2D30;" dangerouslySetInnerHTML="{{ t.icon }}"></div>
+              <div>
+                <div style="font-size:14px;font-weight:600;color:#2D2D2D;letter-spacing:-.01em;line-height:1.25;">{{ t.label }}</div>
+                <div style="font-size:12px;color:#6B7177;margin-top:4px;">{{ t.count }}</div>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- FEATURED PRODUCTS -->
+      <section style="max-width:1280px;margin:0 auto;padding:48px 32px 0;">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px;">
+          <h2 style="font-size:18px;letter-spacing:-.01em;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-weight:600;color:#2D2D2D;margin:0;">Featured products</h2>
+          <button onClick="{{ goPlp }}" style="background:none;border:none;padding:0;font-size:12px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.04em;display:flex;align-items:center;gap:6px;" style-hover="{{ linkHover }}">VIEW CATALOGUE →</button>
+        </div>
+        <div class="nh-grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #D8D8D8;border-left:1px solid #D8D8D8;">
+          <sc-for list="{{ featured }}" as="p" hint-placeholder-count="4">
+            <div style="background:#fff;border-right:1px solid #D8D8D8;border-bottom:1px solid #D8D8D8;display:flex;flex-direction:column;" style-hover="{{ cardHover }}">
+              <button onClick="{{ p.onView }}" style="position:relative;background:#F8F9FB;border:none;border-bottom:1px solid #D8D8D8;padding:0;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+                <span style="position:absolute;top:8px;left:8px;z-index:2;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:10px;letter-spacing:.04em;color:#fff;background:#1A4480;padding:2px 7px;border-radius:2px;">{{ p.code }}</span>
+                <image-slot id="{{ p.slotId }}" style="width:100%;height:100%;" shape="rect" fit="contain" placeholder="{{ p.code }}"></image-slot>
+              </button>
+              <div style="padding:12px 14px 14px;display:flex;flex-direction:column;flex:1;">
+                <div style="font-size:13.5px;font-weight:600;color:#2D2D2D;line-height:1.3;margin-bottom:5px;">{{ p.name }}</div>
+                <div style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:11px;color:#6B7177;margin-bottom:12px;">{{ p.spec }}</div>
+                <div style="margin-top:auto;display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                  <span style="width:6px;height:6px;border-radius:50%;background:#A9803F;flex:none;"></span>
+                  <span style="font-size:11px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">Made to order</span>
+                </div>
+                <div style="display:flex;gap:6px;">
+                  <button onClick="{{ p.onView }}" style="flex:1;height:34px;background:#fff;color:#1A4480;border:1px solid #1A4480;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;" style-hover="{{ outlineNavyHover }}">View</button>
+                  <button onClick="{{ p.onAdd }}" style="flex:1;height:34px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+          <button onClick="{{ goPlp }}" style="background:#16181A;border:none;border-right:1px solid #D8D8D8;border-bottom:1px solid #D8D8D8;padding:24px;display:flex;flex-direction:column;justify-content:center;gap:10px;text-align:left;" style-hover="{{ toolHover }}">
+            <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#E2001A;">Full catalogue</div>
+            <div style="font-size:16px;font-weight:600;color:#fff;line-height:1.25;">Browse all 152 SKUs →</div>
+          </button>
+        </div>
+      </section>
+
+      <!-- AUDIENCE VALUE PROPS -->
+      <section style="max-width:1280px;margin:0 auto;padding:48px 32px 0;">
+        <div class="nh-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #D8D8D8;">
+          <sc-for list="{{ valueProps }}" as="v" hint-placeholder-count="3">
+            <div style="padding:30px 28px;border-right:1px solid #D8D8D8;background:{{ v.bg }};">
+              <div style="color:#E2001A;margin-bottom:16px;display:flex;" dangerouslySetInnerHTML="{{ v.icon }}"></div>
+              <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#6B7177;margin-bottom:8px;">{{ v.eyebrow }}</div>
+              <div style="font-size:18px;font-weight:600;letter-spacing:-.015em;margin-bottom:8px;color:#2D2D2D;">{{ v.title }}</div>
+              <p style="font-size:13.5px;line-height:1.6;color:#6B7177;margin:0 0 16px;">{{ v.body }}</p>
+              <button onClick="{{ v.onClick }}" style="background:none;border:none;padding:0;color:#2D2D2D;font-size:12.5px;font-weight:600;letter-spacing:.02em;display:flex;align-items:center;gap:7px;" style-hover="{{ linkHover }}">{{ v.cta }}
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="14,6 20,12 14,18"/></svg>
+              </button>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- TOOLS STRIP -->
+      <section style="max-width:1280px;margin:0 auto;padding:48px 32px 0;">
+        <h2 style="font-size:18px;letter-spacing:-.01em;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-weight:600;color:#2D2D2D;margin:0 0 20px;">Specification tools</h2>
+        <div class="nh-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <sc-for list="{{ tools }}" as="t" hint-placeholder-count="3">
+            <button onClick="{{ t.onClick }}" style="text-align:left;background:#16181A;border:none;border-radius:2px;padding:26px 24px;display:flex;flex-direction:column;gap:14px;min-height:150px;" style-hover="{{ toolHover }}">
+              <div style="color:#E2001A;display:flex;" dangerouslySetInnerHTML="{{ t.icon }}"></div>
+              <div>
+                <div style="font-size:16px;font-weight:600;color:#fff;letter-spacing:-.01em;margin-bottom:6px;">{{ t.title }}</div>
+                <div style="font-size:13px;color:#9CA1A6;line-height:1.55;">{{ t.body }}</div>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- DEALER CTA -->
+      <section style="max-width:1280px;margin:0 auto;padding:48px 32px 64px;">
+        <div style="background:#2A2D30;border-radius:2px;padding:36px 44px;display:flex;align-items:center;justify-content:space-between;gap:40px;">
+          <div>
+            <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#E2001A;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:14px;">Authorised KinLong Channel</div>
+            <h2 style="font-size:26px;font-weight:600;letter-spacing:-.02em;color:#fff;margin:0 0 10px;max-width:24ch;">Become an authorised dealer.</h2>
+            <p style="font-size:14.5px;line-height:1.6;color:#9CA1A6;margin:0;max-width:56ch;">Trade pricing, technical support, marketing assets and dedicated supply terms across the full KinLong range.</p>
+          </div>
+          <button onClick="{{ goProduct }}" style="flex:none;height:54px;padding:0 32px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">Apply for dealership</button>
+        </div>
+      </section>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isPlp }}" hint-placeholder-val="{{ false }}">
+    <div class="nh-screen">
+      <!-- breadcrumb -->
+      <div style="border-bottom:1px solid #D8D8D8;background:#fff;">
+        <div style="max-width:1280px;margin:0 auto;padding:12px 32px;font-size:12px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.02em;display:flex;gap:8px;align-items:center;">
+          <button onClick="{{ goHome }}" style="background:none;border:none;color:#6B7177;font-family:inherit;font-size:12px;padding:0;">HOME</button>
+          <span>/</span><span style="color:#E2001A;">CATALOGUE</span>
+        </div>
+      </div>
+      <section style="max-width:1280px;margin:0 auto;padding:28px 32px 64px;">
+        <div style="margin-bottom:20px;">
+          <h1 style="font-size:24px;font-weight:600;letter-spacing:-.02em;color:#2D2D2D;margin:0 0 4px;">{{ plpTitle }}</h1>
+          <div style="font-size:13px;color:#6B7177;">KinLong architectural hardware · {{ plpCount }} products</div>
+        </div>
+        <div class="nh-plp" style="display:grid;grid-template-columns:248px 1fr;gap:32px;align-items:start;">
+          <!-- FILTER SIDEBAR -->
+          <aside style="border:1px solid #D8D8D8;border-radius:2px;background:#fff;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #D8D8D8;background:#F4F5F7;">
+              <span style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-weight:600;color:#2D2D2D;">Filter</span>
+              <sc-if value="{{ plpHasFilters }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearFilters }}" style="background:none;border:none;padding:0;font-size:11px;color:#E2001A;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.03em;" style-hover="{{ linkHover }}">CLEAR ALL</button></sc-if>
+            </div>
+            <sc-if value="{{ plpHasFilters }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px;border-bottom:1px solid #D8D8D8;">
+                <sc-for list="{{ activeFilters }}" as="ch" hint-placeholder-count="2">
+                  <button onClick="{{ ch.remove }}" style="display:flex;align-items:center;gap:5px;background:#1A4480;color:#fff;border:none;border-radius:2px;font-size:11px;padding:3px 8px;" style-hover="{{ chipHover }}">{{ ch.val }} ✕</button>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-for list="{{ plpFacets }}" as="fc" hint-placeholder-count="6">
+              <div style="border-bottom:1px solid #D8D8D8;">
+                <button onClick="{{ fc.onToggle }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:none;border:none;font-size:12.5px;font-weight:600;color:#2D2D2D;text-align:left;">{{ fc.label }}<span style="color:#6B7177;font-size:15px;width:14px;text-align:center;">{{ fc.sign }}</span></button>
+                <sc-if value="{{ fc.open }}" hint-placeholder-val="{{ true }}">
+                  <div style="padding:0 16px 12px;display:flex;flex-direction:column;gap:9px;">
+                    <sc-for list="{{ fc.opts }}" as="op" hint-placeholder-count="5">
+                      <button onClick="{{ op.onClick }}" style="display:flex;align-items:center;gap:9px;background:none;border:none;padding:0;text-align:left;font-size:12.5px;color:#2D2D2D;">
+                        <span style="width:15px;height:15px;border:1px solid {{ op.box }};background:{{ op.boxBg }};border-radius:2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;flex:none;">{{ op.tick }}</span>
+                        <span style="flex:1;">{{ op.label }}</span>
+                        <span style="color:#6B7177;font-size:11px;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">{{ op.count }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-for>
+          </aside>
+          <!-- MAIN -->
+          <div>
+            <div class="nh-sticky-inner" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:9px 16px;border:1px solid #D8D8D8;background:#F4F5F7;border-radius:2px;margin-bottom:16px;">
+              <span style="font-size:12.5px;color:#6B7177;"><strong style="color:#2D2D2D;font-weight:600;">{{ plpCount }}</strong> products</span>
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">Sort</span>
+                <select value="{{ plpSort }}" onChange="{{ onPlpSort }}" style="height:34px;border:1px solid #C4C4C4;border-radius:2px;background:#fff;font-size:12.5px;padding:0 10px;color:#2D2D2D;outline:none;">
+                  <option value="relevance">Relevance</option>
+                  <option value="az">Name A–Z</option>
+                  <option value="code">Article code</option>
+                </select>
+              </div>
+            </div>
+            <sc-if value="{{ plpHasResults }}" hint-placeholder-val="{{ true }}">
+            <div class="nh-grid-3" style="display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid #D8D8D8;border-left:1px solid #D8D8D8;">
+              <sc-for list="{{ plpProducts }}" as="p" hint-placeholder-count="9">
+                <div style="background:#fff;border-right:1px solid #D8D8D8;border-bottom:1px solid #D8D8D8;display:flex;flex-direction:column;" style-hover="{{ cardHover }}">
+                  <button onClick="{{ p.onView }}" style="position:relative;background:#F8F9FB;border:none;border-bottom:1px solid #D8D8D8;padding:0;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+                    <span style="position:absolute;top:8px;left:8px;z-index:2;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:10px;letter-spacing:.04em;color:#fff;background:#1A4480;padding:2px 7px;border-radius:2px;">{{ p.code }}</span>
+                    <image-slot id="{{ p.slotId }}" style="width:100%;height:100%;" shape="rect" fit="contain" placeholder="{{ p.code }}"></image-slot>
+                  </button>
+                  <div style="padding:12px 14px 14px;display:flex;flex-direction:column;flex:1;">
+                    <div style="font-size:13.5px;font-weight:600;color:#2D2D2D;line-height:1.3;margin-bottom:5px;">{{ p.name }}</div>
+                    <div style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:11px;color:#6B7177;margin-bottom:12px;">{{ p.spec }}</div>
+                    <div style="margin-top:auto;display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                      <span style="width:6px;height:6px;border-radius:50%;background:{{ p.availColor }};flex:none;"></span>
+                      <span style="font-size:11px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">{{ p.avail }}</span>
+                    </div>
+                    <div style="display:flex;gap:6px;">
+                      <button onClick="{{ p.onView }}" style="flex:1;height:34px;background:#fff;color:#1A4480;border:1px solid #1A4480;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;" style-hover="{{ outlineNavyHover }}">View</button>
+                      <button onClick="{{ p.onAdd }}" style="flex:1;height:34px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">+ Add</button>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            </sc-if>
+            <sc-if value="{{ plpEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="border:1px solid #D8D8D8;border-radius:2px;padding:64px 32px;text-align:center;">
+                <div style="font-size:15px;font-weight:600;color:#2D2D2D;margin-bottom:6px;">No products match your filters</div>
+                <div style="font-size:13px;color:#6B7177;margin-bottom:16px;">Try removing a filter to widen the results.</div>
+                <button onClick="{{ clearFilters }}" style="height:38px;padding:0 18px;background:#fff;color:#1A4480;border:1px solid #1A4480;border-radius:2px;font-size:12px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;" style-hover="{{ outlineNavyHover }}">Clear all filters</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ plpHasResults }}" hint-placeholder-val="{{ true }}">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:24px;">
+              <button style="height:34px;padding:0 12px;border:1px solid #D8D8D8;background:#fff;border-radius:2px;font-size:12.5px;color:#6B7177;">‹ Prev</button>
+              <button style="height:34px;min-width:34px;border:1px solid #1A4480;background:#1A4480;border-radius:2px;font-size:12.5px;color:#fff;font-weight:600;">1</button>
+              <button style="height:34px;min-width:34px;border:1px solid #D8D8D8;background:#fff;border-radius:2px;font-size:12.5px;color:#2D2D2D;">2</button>
+              <button style="height:34px;min-width:34px;border:1px solid #D8D8D8;background:#fff;border-radius:2px;font-size:12.5px;color:#2D2D2D;">3</button>
+              <button style="height:34px;padding:0 12px;border:1px solid #D8D8D8;background:#fff;border-radius:2px;font-size:12.5px;color:#2D2D2D;">Next ›</button>
+            </div>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+    </div>
+    </sc-if>
+    <sc-if value="{{ isProduct }}" hint-placeholder-val="{{ false }}">
+    <div class="nh-screen">
+      <div id="nh-sticky-sentinel" style="position:absolute;height:1px;width:1px;"></div>
+      <!-- breadcrumb -->
+      <div style="border-bottom:1px solid #D8D8D8;background:#fff;">
+        <div style="max-width:1280px;margin:0 auto;padding:12px 32px;font-size:12px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.02em;display:flex;gap:8px;align-items:center;">
+          <button onClick="{{ goHome }}" style="background:none;border:none;color:#6B7177;font-family:inherit;font-size:12px;padding:0;">HOME</button>
+          <span>/</span><span>HANDLES</span><span>/</span><span>DOOR LEVER SETS</span><span>/</span><span style="color:#E2001A;">MZS3208C</span>
+        </div>
+      </div>
+
+      <section style="max-width:1280px;margin:0 auto;padding:36px 32px 64px;">
+        <div class="nh-prod" style="display:grid;grid-template-columns:560px 1fr;gap:48px;align-items:start;">
+          <!-- GALLERY (sticky) -->
+          <div class="nh-prod-gallery" style="position:sticky;top:140px;">
+            <div class="nh-zoomwrap" style="border:1px solid #D8D8D8;background:#fff;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;position:relative;">
+              <div style="position:absolute;top:16px;left:16px;z-index:2;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:11px;color:#6B7177;letter-spacing:.06em;">{{ galleryLabel }}</div>
+              <image-slot id="{{ galleryId }}" style="width:100%;height:100%;" shape="rect" fit="contain" placeholder="{{ galleryPlaceholder }}"></image-slot>
+              <button onClick="{{ openLightbox }}" aria-label="Enlarge image" title="Enlarge" style="position:absolute;bottom:14px;right:14px;z-index:2;display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.92);border:1px solid #D8D8D8;border-radius:2px;padding:6px 10px;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#2D2D2D;" style-hover="{{ outlineDarkHover }}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5"/><path d="M20 15v5h-5"/><path d="M15 4h5v5"/><path d="M9 20H4v-5"/></svg>Enlarge</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
+              <sc-for list="{{ thumbs }}" as="th" hint-placeholder-count="4">
+                <button onClick="{{ th.onClick }}" style="border:1px solid {{ th.border }};background:#fff;padding:0;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;">
+                  <image-slot id="{{ th.id }}" style="width:100%;height:100%;" shape="rect" fit="contain" placeholder="{{ th.placeholder }}"></image-slot>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- INFO COLUMN -->
+          <div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+              <span style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:13px;color:#fff;background:#16181A;padding:4px 9px;border-radius:2px;letter-spacing:.04em;">{{ product.code }}</span>
+              <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#6B7177;">{{ product.brand }} · {{ product.category }}</span>
+            </div>
+            <h1 style="font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.15;margin:0 0 6px;color:#2D2D2D;">{{ product.name }}</h1>
+            <div style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:12.5px;color:#6B7177;margin-bottom:24px;">ERP {{ product.erp }} · {{ product.sub }}</div>
+
+            <!-- key spec strip -->
+            <div class="nh-keyspec" style="display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #D8D8D8;margin-bottom:28px;">
+              <sc-for list="{{ keySpecs }}" as="k" hint-placeholder-count="3">
+                <div style="padding:16px 18px;border-right:1px solid #D8D8D8;">
+                  <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:7px;">{{ k.label }}</div>
+                  <div style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:16px;font-weight:600;color:#1A4480;">{{ k.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- variant: finish -->
+            <div style="margin-bottom:22px;">
+              <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#2D2D2D;margin-bottom:10px;">Finish · <span style="color:#6B7177;">{{ finish }}</span></div>
+              <div style="display:flex;gap:8px;">
+                <sc-for list="{{ finishOpts }}" as="f" hint-placeholder-count="3">
+                  <button onClick="{{ f.onClick }}" style="display:flex;align-items:center;gap:9px;padding:8px 13px;border:1px solid {{ f.border }};background:{{ f.bg }};border-radius:2px;font-size:12.5px;color:#2D2D2D;">
+                    <span style="width:15px;height:15px;border-radius:2px;border:1px solid rgba(0,0,0,.12);background:{{ f.swatch }};"></span>{{ f.label }}
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <!-- variant: rose -->
+            <div style="margin-bottom:26px;">
+              <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#2D2D2D;margin-bottom:10px;">Rose · <span style="color:#6B7177;">{{ rose }}</span></div>
+              <div style="display:flex;gap:8px;">
+                <sc-for list="{{ roseOpts }}" as="r" hint-placeholder-count="2">
+                  <button onClick="{{ r.onClick }}" style="padding:8px 16px;border:1px solid {{ r.border }};background:{{ r.bg }};border-radius:2px;font-size:12.5px;color:#2D2D2D;">{{ r.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+
+            <!-- commercial / CTA -->
+            <div style="border:1px solid #D8D8D8;border-radius:2px;padding:20px 22px;margin-bottom:34px;">
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px;">
+                <div>
+                  <div style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:6px;">Price</div>
+                  <div style="font-size:18px;font-weight:600;color:#2D2D2D;letter-spacing:-.01em;">{{ product.price }}</div>
+                </div>
+                <div style="text-align:right;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">
+                  <div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6B7177;margin-bottom:6px;">MOQ · Pack</div>
+                  <div style="font-size:13px;color:#2A2D30;">20 sets · Carton of 20</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;align-items:stretch;">
+                <div style="display:flex;border:1px solid #C4C4C4;border-radius:2px;">
+                  <button onClick="{{ decQty }}" aria-label="Decrease quantity" style="width:42px;background:#F4F5F7;border:none;border-right:1px solid #C4C4C4;font-size:18px;color:#2A2D30;">−</button>
+                  <input value="{{ qty }}" onInput="{{ onQtyInput }}" aria-label="Quantity" style="width:54px;border:none;text-align:center;font-family:inherit;font-size:15px;outline:none;color:#2D2D2D;background:#fff;">
+                  <button onClick="{{ incQty }}" aria-label="Increase quantity" style="width:42px;background:#F4F5F7;border:none;border-left:1px solid #C4C4C4;font-size:18px;color:#2A2D30;">+</button>
+                </div>
+                <button onClick="{{ addProduct }}" style="flex:1;height:46px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">Add to enquiry</button>
+                <button onClick="{{ addProductQuote }}" style="height:46px;padding:0 22px;background:#fff;color:#1A4480;border:1px solid #1A4480;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ outlineDarkHover }}">Request quote</button>
+              </div>
+            </div>
+
+            <!-- AVAILABILITY -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #D8D8D8;border-radius:2px;margin-bottom:30px;">
+              <div style="display:flex;align-items:center;gap:11px;padding:14px 16px;border-right:1px solid #D8D8D8;">
+                <span style="color:#A9803F;display:flex;" dangerouslySetInnerHTML="{{ clockIcon }}"></span>
+                <div><div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:2px;">Availability</div><div style="font-size:13px;font-weight:600;color:#2D2D2D;">Made to order</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px;padding:14px 16px;border-right:1px solid #D8D8D8;">
+                <span style="color:#A9803F;display:flex;" dangerouslySetInnerHTML="{{ truckIcon }}"></span>
+                <div><div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:2px;">Lead time</div><div style="font-size:13px;font-weight:600;color:#2D2D2D;">3–4 weeks · staged</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px;padding:14px 16px;">
+                <span style="color:#A9803F;display:flex;" dangerouslySetInnerHTML="{{ boxIcon }}"></span>
+                <div><div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:2px;">Packed</div><div style="font-size:13px;font-weight:600;color:#2D2D2D;">Carton of 20 sets</div></div>
+              </div>
+            </div>
+
+            <!-- TABS -->
+            <div style="display:flex;gap:0;border-bottom:1px solid #D8D8D8;margin-bottom:24px;" role="tablist">
+              <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+                <button onClick="{{ t.onClick }}" role="tab" aria-selected="{{ t.active }}" style="position:relative;background:none;border:none;padding:0 20px 13px 0;margin-right:8px;font-size:13px;font-weight:600;letter-spacing:.02em;color:{{ t.color }};" style-hover="{{ linkHover }}">{{ t.label }}
+                  <sc-if value="{{ t.active }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:0;right:8px;bottom:-1px;height:2px;background:#E2001A;"></span></sc-if>
+                </button>
+              </sc-for>
+            </div>
+
+            <!-- TAB: OVERVIEW -->
+            <sc-if value="{{ isTabOverview }}" hint-placeholder-val="{{ true }}">
+            <div style="margin-bottom:8px;">
+              <p style="font-size:13.5px;line-height:1.7;color:#2A2D30;margin:0 0 22px;max-width:62ch;">{{ product.description }}</p>
+              <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#6B7177;margin-bottom:12px;">Specification highlights</div>
+              <div style="display:flex;flex-direction:column;gap:11px;">
+                <sc-for list="{{ product.highlights }}" as="h" hint-placeholder-count="4">
+                  <div style="display:flex;gap:11px;align-items:flex-start;">
+                    <span style="color:#E2001A;flex:none;margin-top:2px;display:flex;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></span>
+                    <span style="font-size:13.5px;line-height:1.5;color:#2A2D30;">{{ h }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+
+            <!-- TAB: SPECIFICATIONS -->
+            <sc-if value="{{ isTabSpec }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:22px;">
+              <sc-for list="{{ specGroups }}" as="grp" hint-placeholder-count="6">
+                <div style="border:1px solid {{ grp.border }};border-radius:2px;overflow:hidden;">
+                  <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 16px;background:{{ grp.headBg }};border-bottom:1px solid {{ grp.border }};">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <sc-if value="{{ grp.emphasised }}" hint-placeholder-val="{{ false }}"><span style="width:3px;height:13px;background:#E2001A;display:block;"></span></sc-if>
+                      <span style="font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-weight:600;color:{{ grp.headColor }};">{{ grp.title }}</span>
+                    </div>
+                    <sc-if value="{{ grp.emphasised }}" hint-placeholder-val="{{ false }}">
+                      <span style="font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#fff;border:1px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);border-radius:2px;padding:2px 6px;">Specifier-critical</span>
+                    </sc-if>
+                  </div>
+                  <div>
+                    <sc-for list="{{ grp.rows }}" as="row" hint-placeholder-count="4">
+                      <div style="display:grid;grid-template-columns:200px 1fr;background:{{ row.bg }};">
+                        <div style="padding:10px 16px;font-size:12.5px;color:#6B7177;border-right:1px solid #E8EAED;border-bottom:1px solid #E8EAED;">{{ row.label }}</div>
+                        <div style="padding:10px 16px;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:12.5px;color:#1A4480;font-weight:500;border-bottom:1px solid #E8EAED;">{{ row.value }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            </sc-if>
+
+            <!-- TAB: ASSURANCE -->
+            <sc-if value="{{ isTabAssurance }}" hint-placeholder-val="{{ false }}">
+            <div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+                <sc-for list="{{ certs }}" as="c" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:8px;border:1px solid #D8D8D8;border-radius:2px;padding:8px 12px;background:#fff;">
+                    <span style="color:#3F7A5B;display:flex;" dangerouslySetInnerHTML="{{ checkIcon }}"></span>
+                    <div><div style="font-size:12px;font-weight:600;color:#2D2D2D;letter-spacing:.01em;">{{ c.code }}</div><div style="font-size:10.5px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">{{ c.desc }}</div></div>
+                  </div>
+                </sc-for>
+              </div>
+              <p style="font-size:13px;line-height:1.65;color:#6B7177;margin:0;max-width:60ch;">Tested and certified to EN 1906:2012 (Grade 3), with corrosion resistance to EN 1670 Grade 4. CE marked and RoHS compliant. Full declarations of performance and test reports are available under Downloads.</p>
+            </div>
+            </sc-if>
+
+            <!-- TAB: DOWNLOADS -->
+            <sc-if value="{{ isTabDownloads }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px solid #D8D8D8;border-radius:2px;overflow:hidden;">
+              <sc-for list="{{ dlList }}" as="d" hint-placeholder-count="4">
+                <button onClick="{{ d.onClick }}" style="width:100%;text-align:left;display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:none;border-bottom:1px solid #E8EAED;" style-hover="{{ dlRowHover }}">
+                  <span style="color:#6B7177;display:flex;" dangerouslySetInnerHTML="{{ downloadIcon }}"></span>
+                  <div style="flex:1;"><div style="font-size:13.5px;font-weight:500;color:#2D2D2D;">{{ d.label }}</div><div style="font-size:11px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">{{ d.meta }}</div></div>
+                  <span style="display:flex;align-items:center;gap:6px;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:10px;color:#E2001A;letter-spacing:.06em;border:1px solid #D8D8D8;border-radius:2px;padding:3px 7px;"><span style="display:flex;" dangerouslySetInnerHTML="{{ lockIcon }}"></span>GATED</span>
+                </button>
+              </sc-for>
+            </div>
+            </sc-if>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMPATIBLE & RELATED -->
+      <section style="border-top:1px solid #D8D8D8;background:#F8F9FB;">
+        <div style="max-width:1280px;margin:0 auto;padding:48px 32px 56px;">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:22px;"><span style="width:3px;height:14px;background:#E2001A;display:block;"></span><span style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-weight:500;color:#2D2D2D;">Compatible &amp; related products</span></div>
+          <div class="nh-grid-4" style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #D8D8D8;border-left:1px solid #D8D8D8;">
+            <sc-for list="{{ related }}" as="p" hint-placeholder-count="4">
+              <div style="background:#fff;border-right:1px solid #D8D8D8;border-bottom:1px solid #D8D8D8;display:flex;flex-direction:column;" style-hover="{{ cardHover }}">
+                <button onClick="{{ p.onView }}" style="position:relative;background:#F8F9FB;border:none;border-bottom:1px solid #D8D8D8;padding:0;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+                  <span style="position:absolute;top:8px;left:8px;z-index:2;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:10px;letter-spacing:.04em;color:#fff;background:#1A4480;padding:2px 7px;border-radius:2px;">{{ p.code }}</span>
+                  <image-slot id="{{ p.slotId }}" style="width:100%;height:100%;" shape="rect" fit="contain" placeholder="{{ p.code }}"></image-slot>
+                </button>
+                <div style="padding:12px 14px 14px;display:flex;flex-direction:column;flex:1;">
+                  <div style="font-size:13.5px;font-weight:600;color:#2D2D2D;line-height:1.3;margin-bottom:5px;">{{ p.name }}</div>
+                  <div style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:11px;color:#6B7177;margin-bottom:12px;">{{ p.spec }}</div>
+                  <div style="margin-top:auto;display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                    <span style="width:6px;height:6px;border-radius:50%;background:#A9803F;flex:none;"></span>
+                    <span style="font-size:11px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">Made to order</span>
+                  </div>
+                  <div style="display:flex;gap:6px;">
+                    <button onClick="{{ p.onView }}" style="flex:1;height:34px;background:#fff;color:#1A4480;border:1px solid #1A4480;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;" style-hover="{{ outlineNavyHover }}">View</button>
+                    <button onClick="{{ p.onAdd }}" style="flex:1;height:34px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:11px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">+ Add</button>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </section>
+
+      <!-- STICKY ACTION BAR -->
+      <sc-if value="{{ stickyVisible }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid #D8D8D8;box-shadow:0 -1px 3px rgba(22,24,26,.07);">
+          <div class="nh-sticky-inner" style="max-width:1280px;margin:0 auto;padding:10px 32px;display:flex;align-items:center;gap:20px;">
+            <span style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:12px;color:#fff;background:#16181A;padding:4px 8px;border-radius:2px;flex:none;">{{ product.code }}</span>
+            <div style="min-width:0;">
+              <div style="font-size:14px;font-weight:600;color:#2D2D2D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ product.name }}</div>
+              <div style="font-size:11.5px;color:#6B7177;">{{ finish }} · {{ rose }}</div>
+            </div>
+            <div style="margin-left:auto;display:flex;align-items:center;gap:14px;">
+              <div style="display:flex;border:1px solid #C4C4C4;border-radius:2px;">
+                <button onClick="{{ decQty }}" aria-label="Decrease quantity" style="width:34px;height:40px;background:#F4F5F7;border:none;border-right:1px solid #C4C4C4;font-size:16px;color:#2A2D30;">−</button>
+                <input value="{{ qty }}" onInput="{{ onQtyInput }}" aria-label="Quantity" style="width:42px;height:40px;border:none;text-align:center;font-size:14px;outline:none;color:#2D2D2D;background:#fff;">
+                <button onClick="{{ incQty }}" aria-label="Increase quantity" style="width:34px;height:40px;background:#F4F5F7;border:none;border-left:1px solid #C4C4C4;font-size:16px;color:#2A2D30;">+</button>
+              </div>
+              <div style="text-align:right;white-space:nowrap;"><span style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#6B7177;">Price </span><span style="font-size:15px;font-weight:600;color:#2D2D2D;">{{ product.price }}</span></div>
+              <button onClick="{{ addProduct }}" style="height:44px;padding:0 24px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">Add to enquiry</button>
+              <button onClick="{{ addProductQuote }}" style="height:44px;padding:0 20px;background:#fff;color:#1A4480;border:1px solid #1A4480;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ outlineDarkHover }}">Request quote</button>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+    </sc-if>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer style="border-top:1px solid #D8D8D8;background:#F4F5F7;color:#6B7177;">
+    <!-- newsletter band -->
+    <div style="border-bottom:1px solid #D8D8D8;">
+      <div style="max-width:1280px;margin:0 auto;padding:30px 32px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:18px;font-weight:600;color:#2D2D2D;letter-spacing:-.015em;margin-bottom:4px;">Specification updates &amp; product bulletins</div>
+          <div style="font-size:13px;color:#6B7177;">For architects and specifiers — monthly, no spam.</div>
+        </div>
+        <sc-if value="{{ newsletterNotDone }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;min-width:380px;">
+          <input value="{{ newsletterEmail }}" onInput="{{ onNewsletter }}" placeholder="Work email" style="flex:1;height:48px;padding:0 15px;border:1px solid #C4C4C4;border-right:none;border-radius:2px 0 0 2px;background:#fff;color:#2D2D2D;font-size:14px;outline:none;">
+          <button onClick="{{ subscribeNewsletter }}" style="height:48px;padding:0 26px;background:#E2001A;color:#fff;border:none;border-radius:0 2px 2px 0;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">Subscribe</button>
+        </div>
+        </sc-if>
+        <sc-if value="{{ newsletterDone }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:9px;color:#2D2D2D;font-size:14px;min-width:380px;"><span style="color:#E2001A;display:flex;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></span>Subscribed — watch your inbox.</div>
+        </sc-if>
+      </div>
+    </div>
+    <!-- columns -->
+    <div class="nh-foot" style="max-width:1280px;margin:0 auto;padding:44px 32px 40px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;">
+      <div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:14px;">
+          <span style="font-size:18px;font-weight:700;color:#E2001A;letter-spacing:-.02em;">NIPPON</span>
+          <span style="font-size:18px;font-weight:400;letter-spacing:.28em;color:#6B7177;">HARDWARE</span>
+        </div>
+        <p style="font-size:12.5px;line-height:1.7;color:#6B7177;max-width:260px;margin:0;">Authorised distributor of KinLong uPVC &amp; aluminium architectural hardware. Specification, supply and technical support for architects, fabricators and dealers.</p>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:14px;">Catalogue</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:12.5px;">
+          <span>Handles</span><span>Locking Systems</span><span>Sliding &amp; Lift</span><span>Sealants</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:14px;">Resources</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:12.5px;">
+          <span>Technical Library</span><span>Hardware Selector</span><span>Compatibility Checker</span><span>CAD &amp; Datasheets</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;margin-bottom:14px;">Trade</div>
+        <div style="display:flex;flex-direction:column;gap:9px;font-size:12.5px;">
+          <span>Become a Dealer</span><span>Request Quote</span><span>Contact</span>
+        </div>
+      </div>
+    </div>
+    <!-- bottom bar -->
+    <div style="border-top:1px solid #D8D8D8;">
+      <div style="max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:18px;font-size:11.5px;color:#6B7177;">
+          <span style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.03em;">© 2026 NIPPON HARDWARE</span>
+          <span>Imprint</span><span>Privacy</span><span>Terms</span><span>Cookies</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="display:flex;align-items:center;gap:13px;color:#6B7177;">
+            <span style="display:flex;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="7" y1="10" x2="7" y2="17"/><circle cx="7" cy="7" r="0.7" fill="currentColor"/><path d="M11 17v-4a2 2 0 0 1 4 0v4"/><line x1="11" y1="10" x2="11" y2="17"/></svg></span>
+            <span style="display:flex;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></span>
+            <span style="display:flex;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="6" width="18" height="12" rx="3"/><polygon points="10,9 16,12 10,15" fill="currentColor" stroke="none"/></svg></span>
+          </div>
+          <span style="width:1px;height:14px;background:#D8D8D8;"></span>
+          <button onClick="{{ backToTop }}" style="display:flex;align-items:center;gap:7px;background:none;border:1px solid #C4C4C4;border-radius:2px;color:#6B7177;font-size:11px;padding:6px 11px;letter-spacing:.05em;text-transform:uppercase;" style-hover="{{ utilHover }}"><span style="display:flex;" dangerouslySetInnerHTML="{{ arrowUpIcon }}"></span>Top</button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== ENQUIRY / RFQ DRAWER ===== -->
+  <sc-if value="{{ basketOpen }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div onClick="{{ toggleBasket }}" style="position:fixed;inset:0;background:rgba(22,24,26,.5);z-index:50;"></div>
+    <aside class="nh-drawer" role="dialog" aria-modal="true" aria-label="Enquiry basket" style="position:fixed;top:0;right:0;bottom:0;width:440px;max-width:100vw;background:#fff;z-index:51;display:flex;flex-direction:column;border-left:1px solid #D8D8D8;">
+      <div style="padding:20px 24px;border-bottom:1px solid #D8D8D8;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-weight:600;color:#2D2D2D;">Enquiry · RFQ</div>
+          <div style="font-size:12px;color:#6B7177;margin-top:3px;">{{ basketCount }} item(s) · pricing on request</div>
+        </div>
+        <button onClick="{{ toggleBasket }}" aria-label="Close enquiry" style="background:none;border:none;color:#6B7177;padding:6px;display:flex;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+        </button>
+      </div>
+
+      <div style="flex:1;overflow-y:auto;">
+        <sc-if value="{{ basketEmpty }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:64px 32px;text-align:center;color:#6B7177;">
+            <div style="display:flex;justify-content:center;margin-bottom:16px;color:#C4C4C4;">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 6h16l-1.5 10.5a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7L4 6Z"/><path d="M8 6V5a4 4 0 0 1 8 0v1"/></svg>
+            </div>
+            <div style="font-size:14px;color:#2D2D2D;font-weight:500;margin-bottom:6px;">Your enquiry is empty</div>
+            <div style="font-size:12.5px;line-height:1.5;">Add products to build a quote request. Submit once to receive pricing and lead times.</div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ basketHasItems }}" hint-placeholder-val="{{ false }}">
+        <div>
+          <sc-for list="{{ basket }}" as="b" hint-placeholder-count="2">
+            <div style="display:grid;grid-template-columns:64px 1fr auto;gap:14px;padding:16px 24px;border-bottom:1px solid #E8EAED;align-items:start;">
+              <div style="width:64px;height:64px;border:1px solid #D8D8D8;background:#F4F5F7;"></div>
+              <div>
+                <div style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:12px;color:#E2001A;letter-spacing:.03em;margin-bottom:3px;">{{ b.code }}</div>
+                <div style="font-size:13px;font-weight:500;color:#2D2D2D;line-height:1.3;margin-bottom:4px;">{{ b.name }}</div>
+                <div style="font-size:11.5px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">{{ b.finish }}</div>
+                <div style="display:flex;align-items:center;gap:10px;margin-top:9px;">
+                  <div style="display:flex;border:1px solid #C4C4C4;border-radius:2px;">
+                    <button onClick="{{ b.dec }}" style="width:28px;height:26px;background:#F4F5F7;border:none;border-right:1px solid #C4C4C4;font-size:14px;color:#2A2D30;">−</button>
+                    <div style="width:38px;display:flex;align-items:center;justify-content:center;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:12.5px;">{{ b.qty }}</div>
+                    <button onClick="{{ b.inc }}" style="width:28px;height:26px;background:#F4F5F7;border:none;border-left:1px solid #C4C4C4;font-size:14px;color:#2A2D30;">+</button>
+                  </div>
+                  <button onClick="{{ b.remove }}" style="background:none;border:none;color:#A4472F;font-size:11.5px;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.03em;padding:0;">REMOVE</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+
+          <sc-if value="{{ submitted }}" hint-placeholder-val="{{ false }}">
+            <div style="margin:20px 24px;padding:18px;border:1px solid #3F7A5B;border-radius:2px;background:#F1F6F3;">
+              <div style="display:flex;align-items:center;gap:8px;color:#3F7A5B;font-weight:600;font-size:13px;margin-bottom:5px;"><span style="display:flex;" dangerouslySetInnerHTML="{{ checkIcon }}"></span>Enquiry submitted</div>
+              <div style="font-size:12.5px;color:#2A2D30;line-height:1.5;">Our specification team will respond with pricing and lead times within one business day.</div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ notSubmitted }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:18px 24px 8px;">
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#2D2D2D;margin-bottom:14px;">Project &amp; firm details <span style="color:#A4472F;">*</span></div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <input value="{{ form.name }}" onInput="{{ onFormName }}" placeholder="Your name *" aria-label="Your name" style="width:100%;height:42px;padding:0 13px;border:1px solid {{ fieldBorder.name }};border-radius:2px;font-size:13.5px;outline:none;" style-focus="{{ searchFocus }}">
+                <sc-if value="{{ hasErrName }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#A4472F;margin-top:5px;">{{ errName }}</div></sc-if>
+              </div>
+              <div>
+                <input value="{{ form.firm }}" onInput="{{ onFormFirm }}" placeholder="Firm / company *" aria-label="Firm or company" style="width:100%;height:42px;padding:0 13px;border:1px solid {{ fieldBorder.firm }};border-radius:2px;font-size:13.5px;outline:none;" style-focus="{{ searchFocus }}">
+                <sc-if value="{{ hasErrFirm }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#A4472F;margin-top:5px;">{{ errFirm }}</div></sc-if>
+              </div>
+              <div>
+                <select value="{{ form.role }}" onChange="{{ onFormRole }}" aria-label="Your role" style="width:100%;height:42px;padding:0 13px;border:1px solid {{ fieldBorder.role }};border-radius:2px;font-size:13.5px;outline:none;background:#fff;color:#2D2D2D;">
+                  <option value="">Role… *</option>
+                  <option value="Architect / Specifier">Architect / Specifier</option>
+                  <option value="Contractor / Fabricator">Contractor / Fabricator</option>
+                  <option value="Wholesaler / Dealer">Wholesaler / Dealer</option>
+                </select>
+                <sc-if value="{{ hasErrRole }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#A4472F;margin-top:5px;">{{ errRole }}</div></sc-if>
+              </div>
+              <input value="{{ form.project }}" onInput="{{ onFormProject }}" placeholder="Project name / reference (optional)" aria-label="Project reference" style="width:100%;height:42px;padding:0 13px;border:1px solid #C4C4C4;border-radius:2px;font-size:13.5px;outline:none;" style-focus="{{ searchFocus }}">
+            </div>
+          </div>
+          </sc-if>
+        </div>
+        </sc-if>
+      </div>
+
+      <sc-if value="{{ basketHasItems }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid #D8D8D8;padding:18px 24px;">
+        <button onClick="{{ submitEnquiry }}" style="width:100%;height:50px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">Submit enquiry</button>
+        <div style="text-align:center;font-size:11px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.03em;margin-top:10px;">NO OBLIGATION · RESPONSE WITHIN 1 BUSINESS DAY</div>
+      </div>
+      </sc-if>
+    </aside>
+  </div>
+  </sc-if>
+
+  <!-- ===== DOWNLOAD GATE / LEAD CAPTURE MODAL ===== -->
+  <sc-if value="{{ dlModalOpen }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div onClick="{{ closeDlModal }}" style="position:fixed;inset:0;background:rgba(22,24,26,.55);z-index:60;"></div>
+    <div class="nh-pop" role="dialog" aria-modal="true" aria-label="Gated download" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;max-width:calc(100vw - 32px);background:#fff;z-index:61;border-radius:2px;border-top:4px solid #E2001A;">
+      <div style="padding:24px 28px 22px;border-bottom:1px solid #D8D8D8;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+        <div style="display:flex;gap:12px;">
+          <span style="color:#E2001A;display:flex;margin-top:2px;flex:none;" dangerouslySetInnerHTML="{{ downloadIcon }}"></span>
+          <div>
+            <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;color:#E2001A;margin-bottom:5px;">Gated download</div>
+            <div style="font-size:18px;font-weight:600;color:#2D2D2D;letter-spacing:-.015em;line-height:1.25;">{{ dlTarget }}</div>
+            <div style="font-size:12.5px;color:#6B7177;margin-top:3px;">MZS3208C · Mortise Lever Handle Set</div>
+          </div>
+        </div>
+        <button onClick="{{ closeDlModal }}" style="background:none;border:none;color:#6B7177;padding:4px;display:flex;flex:none;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+      </div>
+      <sc-if value="{{ dlNotSubmitted }}" hint-placeholder-val="{{ true }}">
+      <div style="padding:22px 28px 26px;">
+        <p style="font-size:13px;line-height:1.6;color:#6B7177;margin:0 0 18px;">Datasheets, CAD and certifications are released to verified practices. Enter your firm details to unlock the download.</p>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:18px;">
+          <div>
+            <input value="{{ dlForm.name }}" onInput="{{ onDlName }}" placeholder="Your name *" aria-label="Your name" style="width:100%;height:44px;padding:0 14px;border:1px solid {{ dlFieldBorder.name }};border-radius:2px;font-size:14px;outline:none;" style-focus="{{ searchFocus }}">
+            <sc-if value="{{ hasDlErrName }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#A4472F;margin-top:5px;">{{ dlErrName }}</div></sc-if>
+          </div>
+          <div>
+            <input value="{{ dlForm.firm }}" onInput="{{ onDlFirm }}" placeholder="Practice / firm *" aria-label="Practice or firm" style="width:100%;height:44px;padding:0 14px;border:1px solid {{ dlFieldBorder.firm }};border-radius:2px;font-size:14px;outline:none;" style-focus="{{ searchFocus }}">
+            <sc-if value="{{ hasDlErrFirm }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#A4472F;margin-top:5px;">{{ dlErrFirm }}</div></sc-if>
+          </div>
+          <div>
+            <input value="{{ dlForm.email }}" onInput="{{ onDlEmail }}" placeholder="Work email *" aria-label="Work email" style="width:100%;height:44px;padding:0 14px;border:1px solid {{ dlFieldBorder.email }};border-radius:2px;font-size:14px;outline:none;" style-focus="{{ searchFocus }}">
+            <sc-if value="{{ hasDlErrEmail }}" hint-placeholder-val="{{ false }}"><div style="font-size:11px;color:#A4472F;margin-top:5px;">{{ dlErrEmail }}</div></sc-if>
+          </div>
+        </div>
+        <button onClick="{{ submitDl }}" style="width:100%;height:48px;background:#E2001A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;" style-hover="{{ redBtnHover }}">Unlock download</button>
+        <div style="display:flex;align-items:center;justify-content:center;gap:7px;font-size:11px;color:#6B7177;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;letter-spacing:.03em;margin-top:12px;"><span style="display:flex;" dangerouslySetInnerHTML="{{ lockIcon }}"></span>SECURE · USED ONLY FOR SPECIFICATION SUPPORT</div>
+      </div>
+      </sc-if>
+      <sc-if value="{{ dlSubmitted }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:30px 28px;text-align:center;">
+        <div style="display:flex;justify-content:center;margin-bottom:14px;color:#3F7A5B;"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8.5,12 11,14.5 16,9"/></svg></div>
+        <div style="font-size:17px;font-weight:600;color:#2D2D2D;margin-bottom:6px;">Access granted</div>
+        <p style="font-size:13px;line-height:1.6;color:#6B7177;margin:0 0 20px;max-width:34ch;margin-left:auto;margin-right:auto;">Your download is ready. A copy of the full technical pack has also been sent to your email.</p>
+        <button onClick="{{ closeDlModal }}" style="height:46px;padding:0 24px;background:#16181A;color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;display:inline-flex;align-items:center;gap:9px;"><span style="display:flex;" dangerouslySetInnerHTML="{{ downloadIcon }}"></span>Download file</button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ===== LIGHTBOX ===== -->
+  <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
+  <div>
+    <div onClick="{{ closeLightbox }}" style="position:fixed;inset:0;background:rgba(22,24,26,.82);z-index:80;"></div>
+    <div class="nh-pop" role="dialog" aria-modal="true" aria-label="Product image" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(86vw,820px);max-height:92vh;overflow:auto;background:#fff;z-index:81;border-radius:2px;padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <span style="font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;font-size:12px;color:#6B7177;letter-spacing:.06em;">{{ product.code }} · {{ galleryLabel }}</span>
+        <button onClick="{{ closeLightbox }}" aria-label="Close image viewer" title="Close" style="background:none;border:none;color:#6B7177;display:flex;padding:4px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg></button>
+      </div>
+      <div style="border:1px solid #D8D8D8;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:#F8F9FB;">
+        <image-slot id="{{ galleryId }}" style="width:100%;height:100%;" shape="rect" fit="contain" placeholder="Drop product image"></image-slot>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px;">
+        <sc-for list="{{ thumbs }}" as="th" hint-placeholder-count="4">
+          <button onClick="{{ th.onClick }}" aria-label="View angle" style="border:1px solid {{ th.border }};background:#fff;padding:0;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;">
+            <image-slot id="{{ th.id }}" style="width:100%;height:100%;" shape="rect" fit="contain" placeholder="{{ th.placeholder }}"></image-slot>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- TOAST -->
+  <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+    <div class="nh-toast" style="position:fixed;left:24px;bottom:24px;z-index:70;display:flex;align-items:center;gap:11px;background:#16181A;color:#fff;border-radius:2px;padding:13px 18px;box-shadow:0 6px 20px rgba(22,24,26,.28);border-left:3px solid #E2001A;">
+      <span style="color:#fff;background:#3F7A5B;border-radius:2px;display:flex;padding:2px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></span>
+      <span style="font-size:13px;font-weight:500;letter-spacing:.01em;font-family:'Helvetica Neue','Helvetica','Arimo','Arial',sans-serif;">{{ toast }}</span>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1320,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'home',
+    basket: [],
+    basketOpen: false,
+    searchQuery: '',
+    searchFocused: false,
+    toast: '',
+    galleryIndex: 0,
+    hoveredNav: null,
+    activeTab: 'overview',
+    lightboxOpen: false,
+    formErrors: {},
+    dlErrors: {},
+    scrollY: 0,
+    dlModalOpen: false,
+    dlTarget: '',
+    dlSubmitted: false,
+    dlForm: { name:'', firm:'', email:'' },
+    newsletterEmail: '',
+    newsletterDone: false,
+    finish: 'Satin Steel',
+    rose: 'Round',
+    qty: 20,
+    submitted: false,
+    form: { name:'', firm:'', role:'', project:'' },
+    downloadGate: false,
+    plpFilters: {},
+    plpOpenFacets: { 'Category':true, 'Finish':true, 'Material':false, 'Door weight':false, 'Standard':false, 'Availability':false },
+    plpSort: 'relevance',
+    plpView: 'grid',
+    plpTitle: 'Full catalogue',
+  };
+
+  // ---- data ----
+  navGroupNames = ['Handles','Hinges & Stays','Locking Systems','Sliding & Lift Systems','Profiles & Point-Fixing','Sealants','Door Closing','Fasteners & Consumables'];
+
+  megaSub = {
+    'Handles': ['Lever handle sets','Pull handles','Window handles','Knobs & escutcheons','Cremone bolts','Flush pulls'],
+    'Hinges & Stays': ['Pivot hinges','Butt hinges','Friction stays','Restrictor stays','Concealed hinges','Lift-off hinges'],
+    'Locking Systems': ['Mortise lock bodies','Multipoint locks','Euro cylinders','Strike plates','Espagnolette gear','Shoot bolts'],
+    'Sliding & Lift Systems': ['Sliding rollers & wheels','Lift-slide gear','Track & guides','Anti-lift blocks','Soft-close dampers','End stops'],
+    'Profiles & Point-Fixing': ['Spider fittings','Routels & countersunk','Patch fittings','Glass clamps','Tension rods','Standoffs'],
+    'Sealants': ['Neutral silicone','Structural silicone','Weatherproofing','Backer rods','Primers','Cleaners'],
+    'Door Closing': ['Overhead closers','Floor springs','Concealed closers','Hold-open arms','Cam-action closers','Accessories'],
+    'Fasteners & Consumables': ['Self-drilling screws','Anchors & plugs','Rivets','Setting blocks','Packers & shims','Drill bits'],
+  };
+
+  product = {
+    code: 'MZS3208C',
+    erp: 'NH-HDL-3208',
+    name: 'Mortise Lever Handle Set on Rose',
+    brand: 'KinLong',
+    category: 'Handles',
+    sub: 'Door Lever Sets',
+    price: 'On request',
+    finishes: ['Satin Steel','Matt Black','Brushed Bronze'],
+    roses: ['Round','Square'],
+    description: 'A solid SUS 304 mortise lever set on rose for hinged interior and entrance doors. Sprung lever return, concealed fixing and a reversible non-handed chassis make it specification-friendly across left- and right-hand openings — engineered to EN 1906 Grade 3 for 200,000 operating cycles.',
+    highlights: ['Reversible, non-handed — one SKU for both hand orientations','Concealed through-fixing, no visible screws on the rose','8 mm sprung spindle, 35\u00b0 lever throw','Pairs with the T-MSD35/I mortise lock body'],
+  };
+
+  // ---- catalogue (PLP sample data) ----
+  catalogue = [
+    { code:'MZS3208C', name:'Mortise Lever Handle Set', cat:'Handles', finish:'Satin Steel', material:'SUS 304', weight:'≤ 80 kg', std:'EN 1906', avail:'Made to order', spec:'SUS304 · EN 1906 · ≤ 80 kg' },
+    { code:'PH-D32L', name:'Pull Handle D-Type 32 mm', cat:'Handles', finish:'Brushed Bronze', material:'SUS 316', weight:'—', std:'EN 1906', avail:'In stock', spec:'SUS316 · 32 mm · 300 mm CTC' },
+    { code:'WH-220', name:'Window Espagnolette Handle', cat:'Handles', finish:'Matt Black', material:'Aluminium', weight:'—', std:'EN 13126', avail:'In stock', spec:'Alu · 7 mm spindle · LH/RH' },
+    { code:'T-MSD35/I', name:'Mortise Lock Body', cat:'Locking Systems', finish:'Satin Steel', material:'SUS 304', weight:'—', std:'DIN 18251', avail:'Made to order', spec:'35 mm backset · DIN' },
+    { code:'EC-6030', name:'Euro Cylinder 60/30', cat:'Locking Systems', finish:'Satin Steel', material:'Brass', weight:'—', std:'EN 1303', avail:'In stock', spec:'Brass · 5 keys · EN 1303' },
+    { code:'J5C', name:'Pivot Hinge', cat:'Hinges & Stays', finish:'Satin Steel', material:'SUS 304', weight:'≤ 120 kg', std:'EN 1935', avail:'In stock', spec:'Door ≤ 120 kg · EN 1935' },
+    { code:'HCC40A-14', name:'Friction Stay 14"', cat:'Hinges & Stays', finish:'Satin Steel', material:'SUS 304', weight:'≤ 40 kg', std:'EN 13126', avail:'In stock', spec:'Sash ≤ 40 kg · 14"' },
+    { code:'BH-100', name:'Butt Hinge 100 mm', cat:'Hinges & Stays', finish:'Satin Steel', material:'SUS 304', weight:'≤ 80 kg', std:'EN 1935', avail:'In stock', spec:'100 × 75 mm · Grade 13' },
+    { code:'H50B', name:'Sliding Roller', cat:'Sliding & Lift Systems', finish:'Satin Steel', material:'SUS 304', weight:'≤ 80 kg', std:'—', avail:'Made to order', spec:'Load ≤ 80 kg / pair' },
+    { code:'LS-200', name:'Lift-Slide Gear Set', cat:'Sliding & Lift Systems', finish:'Matt Black', material:'Steel', weight:'≤ 200 kg', std:'—', avail:'Made to order', spec:'Panel ≤ 200 kg' },
+    { code:'A250A2', name:'Spider Fitting 4-Arm', cat:'Profiles & Point-Fixing', finish:'Brushed Bronze', material:'SUS 316', weight:'—', std:'—', avail:'Made to order', spec:'4-arm · SUS316' },
+    { code:'KL-WS601', name:'Neutral Silicone Sealant', cat:'Sealants', finish:'Matt Black', material:'Silicone', weight:'—', std:'ISO 11600', avail:'In stock', spec:'300 ml · neutral cure' },
+  ];
+  plpFacets = [
+    ['Category', 'cat', ['Handles','Hinges & Stays','Locking Systems','Sliding & Lift Systems','Profiles & Point-Fixing','Sealants']],
+    ['Finish', 'finish', ['Satin Steel','Matt Black','Brushed Bronze']],
+    ['Material', 'material', ['SUS 304','SUS 316','Aluminium','Brass','Steel','Silicone']],
+    ['Door weight', 'weight', ['≤ 40 kg','≤ 80 kg','≤ 120 kg','≤ 200 kg']],
+    ['Standard', 'std', ['EN 1906','EN 1935','EN 1303','EN 13126','DIN 18251','ISO 11600']],
+    ['Availability', 'avail', ['In stock','Made to order']],
+  ];
+  toggleFacet(name){ this.setState(s => ({ plpOpenFacets: {...s.plpOpenFacets, [name]: !s.plpOpenFacets[name]} })); }
+  toggleFilter(key, val){ this.setState(s => { const cur = s.plpFilters[key] || []; const next = cur.includes(val) ? cur.filter(v=>v!==val) : [...cur, val]; const f = {...s.plpFilters}; if (next.length) f[key] = next; else delete f[key]; return { plpFilters: f }; }); }
+  clearFilters(){ this.setState({ plpFilters: {} }); }
+  setPlpSort(v){ this.setState({ plpSort: v }); }
+  setPlpView(v){ this.setState({ plpView: v }); }
+  goCatalogue(title){ this.setState({ screen:'plp', plpTitle: title || 'Full catalogue', basketOpen:false }, ()=>{ try{ window.scrollTo(0,0);}catch(e){} }); }
+  goCategory(cat){ this.setState({ screen:'plp', plpTitle: cat, plpFilters: { cat:[cat] }, basketOpen:false }, ()=>{ try{ window.scrollTo(0,0);}catch(e){} }); }
+
+  go(screen){ this.setState({ screen, basketOpen:false }, ()=>{ try{ window.scrollTo(0,0);}catch(e){} }); }
+
+  addToEnquiry(item, open=true){
+    this.setState(s => {
+      const key = i => i.code + '|' + (i.finish||'');
+      const idx = s.basket.findIndex(b => key(b) === key(item));
+      let basket;
+      if (idx >= 0){ basket = s.basket.slice(); basket[idx] = {...basket[idx], qty: basket[idx].qty + (item.qty||1)}; }
+      else basket = [...s.basket, {...item, qty: item.qty||1}];
+      return { basket, basketOpen: open ? true : s.basketOpen };
+    });
+  }
+  notify(msg){ this.setState({ toast: msg }); clearTimeout(this._toastT); this._toastT = setTimeout(() => this.setState({ toast:'' }), 2400); }
+  removeItem(i){ this.setState(s => ({ basket: s.basket.filter((_,n)=>n!==i) })); }
+  setItemQty(i, q){ q = Math.max(1, parseInt(q)||1); this.setState(s => { const b=s.basket.slice(); b[i]={...b[i],qty:q}; return {basket:b}; }); }
+
+  navEnter(i){ clearTimeout(this._closeT); this.setState({ hoveredNav:i }); }
+  navToggle(i){ clearTimeout(this._closeT); this.setState(s => ({ hoveredNav: s.hoveredNav === i ? null : i })); }
+  navLeaveSoon(){ this._closeT = setTimeout(()=>this.setState({ hoveredNav:null }), 130); }
+  keepMega(){ clearTimeout(this._closeT); }
+  closeMega(){ clearTimeout(this._closeT); this.setState({ hoveredNav:null }); }
+  setTab(id){ this.setState({ activeTab:id }); try{ localStorage.setItem('nh-tab', id); }catch(e){} }
+  setQtyInput(v){ const n = Math.max(1, parseInt(String(v).replace(/[^0-9]/g,''))||1); this.setState({ qty:n }); }
+  openLightbox(){ this.setState({ lightboxOpen:true }); }
+  closeLightbox(){ this.setState({ lightboxOpen:false }); }
+  submitEnquiry(){
+    const f = this.state.form;
+    const errs = {};
+    if (!f.name.trim()) errs.name = 'Enter your name';
+    if (!f.firm.trim()) errs.firm = 'Enter your firm';
+    if (!f.role) errs.role = 'Select a role';
+    if (Object.keys(errs).length){ this.setState({ formErrors: errs }); return; }
+    this.setState({ submitted:true, formErrors:{} });
+  }
+  submitDl(){
+    const f = this.state.dlForm;
+    const errs = {};
+    if (!f.name.trim()) errs.name = 'Enter your name';
+    if (!f.firm.trim()) errs.firm = 'Enter your practice / firm';
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email.trim())) errs.email = 'Enter a valid work email';
+    if (Object.keys(errs).length){ this.setState({ dlErrors: errs }); return; }
+    this.setState({ dlSubmitted:true, dlErrors:{} });
+  }
+
+  componentDidMount(){
+    this._onScroll = () => {
+      if (this.state.screen !== 'product') return;
+      const y = (document.scrollingElement || document.documentElement || {}).scrollTop || window.scrollY || window.pageYOffset || 0;
+      const vis = y > 540;
+      if (vis !== this.state.stickyVisible) this.setState({ stickyVisible: vis });
+    };
+    window.addEventListener('scroll', this._onScroll, true);
+    document.addEventListener('scroll', this._onScroll, true);
+    this._onKey = (e) => { if (e.key === 'Escape') this.setState({ dlModalOpen:false, basketOpen:false, hoveredNav:null, searchFocused:false, lightboxOpen:false }); };
+    window.addEventListener('keydown', this._onKey);
+    try { const t = localStorage.getItem('nh-tab'); if (t) this.setState({ activeTab: t }); } catch(e){}
+    this._setupSticky();
+  }
+  componentDidUpdate(){ this._setupSticky(); }
+  componentWillUnmount(){
+    window.removeEventListener('scroll', this._onScroll, true);
+    document.removeEventListener('scroll', this._onScroll, true);
+    window.removeEventListener('keydown', this._onKey);
+    if (this._io) this._io.disconnect();
+  }
+  _setupSticky(){
+    if (this.state.screen !== 'product'){
+      if (this._io){ this._io.disconnect(); this._io = null; }
+      if (this.state.stickyVisible) this.setState({ stickyVisible:false });
+      return;
+    }
+    if (this._io) return;
+    const el = document.getElementById('nh-sticky-sentinel');
+    if (!el) return;
+    this._io = new IntersectionObserver((entries) => {
+      const e = entries[0];
+      const vis = !e.isIntersecting && e.boundingClientRect.top < 0;
+      if (vis !== this.state.stickyVisible) this.setState({ stickyVisible: vis });
+    }, { rootMargin: '-540px 0px 0px 0px', threshold: 0 });
+    this._io.observe(el);
+  }
+
+  openDlModal(label){ this.setState({ dlModalOpen:true, dlTarget:label, dlSubmitted:false, dlErrors:{} }); }
+  closeDlModal(){ this.setState({ dlModalOpen:false }); }
+  submitDlOld(){ this.setState({ dlSubmitted:true }); }
+
+  // ---- icon library (thin-line, 1.5px) ----
+  svg(inner, size, sw){ return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+sw+'" stroke-linecap="round" stroke-linejoin="round" style="display:block">'+inner+'</svg>'; }
+  ic(paths){ return this.svg(paths, 26, 1.5); }
+  iconRef(html){ return { __html: html }; }
+  get icons(){
+    return {
+      handles: this.ic('<rect x="4" y="10" width="11" height="4" rx="1"/><path d="M15 12h3a2 2 0 0 1 2 2v3"/>'),
+      hinges: this.ic('<rect x="5" y="4" width="5" height="16" rx="1"/><rect x="14" y="4" width="5" height="16" rx="1"/><line x1="12" y1="6" x2="12" y2="18"/>'),
+      locking: this.ic('<rect x="5" y="10" width="14" height="9" rx="1"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>'),
+      sliding: this.ic('<rect x="3" y="6" width="8" height="12"/><rect x="13" y="6" width="8" height="12"/><line x1="3" y1="21" x2="21" y2="21"/>'),
+      profiles: this.ic('<circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/>'),
+      sealants: this.ic('<path d="M8 4h8v3l-2 2v9a2 2 0 0 1-2 2 2 2 0 0 1-2-2V9L8 7Z"/>'),
+      closing: this.ic('<rect x="4" y="4" width="9" height="16" rx="1"/><path d="M13 12h5"/><path d="M16 9l3 3-3 3"/>'),
+      fasteners: this.ic('<path d="M12 3v4"/><path d="M9 7h6l-1 4h-4Z"/><path d="M11 11v8l1 2 1-2v-8"/>'),
+      architect: this.ic('<path d="M4 20V7l8-3 8 3v13"/><line x1="4" y1="20" x2="20" y2="20"/><line x1="9" y1="20" x2="9" y2="12"/><line x1="15" y1="20" x2="15" y2="12"/>'),
+      contractor: this.ic('<path d="M4 18a8 8 0 0 1 16 0"/><line x1="4" y1="18" x2="20" y2="18"/><path d="M12 10V4"/><circle cx="12" cy="4" r="1"/>'),
+      dealer: this.ic('<rect x="4" y="9" width="16" height="11"/><path d="M4 9l2-5h12l2 5"/><line x1="9" y1="13" x2="15" y2="13"/>'),
+      selector: this.ic('<rect x="4" y="4" width="16" height="16" rx="1"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="10" y1="10" x2="10" y2="20"/><circle cx="15" cy="15" r="1.4"/>'),
+      compat: this.ic('<path d="M8 8a4 4 0 0 1 0 8"/><path d="M16 16a4 4 0 0 1 0-8"/><line x1="9" y1="12" x2="15" y2="12"/>'),
+      library: this.ic('<path d="M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4Z"/><path d="M20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6Z"/>'),
+      pin: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 0 0-14 0c0 4.7 7 11 7 11Z"/><circle cx="12" cy="10" r="2.4"/></svg>',
+      user: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>',
+      globe: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M3 12h18"/><path d="M12 4c2.5 2.4 2.5 13.6 0 16M12 4c-2.5 2.4-2.5 13.6 0 16"/></svg>',
+      truck: this.ic('<rect x="2" y="7" width="12" height="9"/><path d="M14 10h4l3 3v3h-7Z"/><circle cx="6.5" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/>'),
+      clock: this.ic('<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>'),
+      box: this.ic('<path d="M12 3 4 7v10l8 4 8-4V7Z"/><path d="M4 7l8 4 8-4"/><path d="M12 11v10"/>'),
+      shield: this.ic('<path d="M12 3 5 6v6c0 4 3 6.5 7 9 4-2.5 7-5 7-9V6Z"/><path d="M9.5 12l2 2 3.5-4"/>'),
+      doc: this.ic('<path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8Z"/><polyline points="14,3 14,8 19,8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="16" x2="15" y2="16"/>'),
+      download: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><polyline points="7,11 12,16 17,11"/><path d="M5 20h14"/></svg>',
+      lock: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="1"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
+      arrowUp: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="5"/><polyline points="6,11 12,5 18,11"/></svg>',
+      check: this.svg('<polyline points="20,6 9,17 4,12"/>', 14, 2),
+      pdf: this.svg('<path d="M14 3H7a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V8Z"/><polyline points="14,3 14,8 19,8"/>', 15, 1.5),
+      cad: this.svg('<rect x="4" y="4" width="16" height="16"/><line x1="4" y1="10" x2="10" y2="10"/><line x1="10" y1="4" x2="10" y2="10"/><circle cx="15" cy="15" r="2"/>', 15, 1.5),
+    };
+  }
+
+  renderVals(){
+    const s = this.state;
+    const product = this.product;
+    const I = this.icons;
+
+    const navGroups = this.navGroupNames.map((label,i) => ({
+      label,
+      onClick: () => this.navToggle(i),
+      onEnter: () => this.navEnter(i),
+      active: s.screen === 'product' && label === 'Handles',
+    }));
+    const hoveredGroup = s.hoveredNav != null ? this.navGroupNames[s.hoveredNav] : '';
+    const hoveredSubs = (this.megaSub[hoveredGroup] || []).map(label => ({ label, onClick: () => this.goCategory(hoveredGroup) }));
+    const utilityNav = [
+      { label:'Tools', onClick:()=>this.go('home') },
+      { label:'Technical Library', onClick:()=>this.go('home') },
+      { label:'Become a Dealer', onClick:()=>this.go('home') },
+      { label:'Enquiry (RFQ)', onClick:()=>this.setState({basketOpen:true}) },
+    ];
+
+    const basketCount = s.basket.reduce((n,b)=>n+b.qty,0);
+
+    // ---- HOME data ----
+    const quickCodes = ['H50B','J5C','T-MSD35/I','A250A2'].map(label => ({ label, onClick:()=>this.go('product') }));
+
+    const featuredData = [
+      ['MZS3208C','Mortise Lever Handle Set','EN 1906 \u00b7 SUS304'],
+      ['T-MSD35/I','Door Lock Body','35 mm backset \u00b7 DIN'],
+      ['J5C','Pivot Hinge','Door \u2264 120 kg'],
+      ['HCC40A-14','Friction Stay 14"','Sash \u2264 40 kg'],
+      ['H50B','Sliding Roller','Load \u2264 80 kg / pair'],
+      ['A250A2','Spider Fitting','4-arm \u00b7 SUS316'],
+      ['KL-WS601','Neutral Silicone Sealant','300 ml \u00b7 neutral cure'],
+    ];
+    const featured = featuredData.map(([code,name,spec],i) => ({
+      code, name, spec, slotId: 'nh-feat-'+i,
+      onView: () => this.go('product'),
+      onAdd: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.addToEnquiry({ code, name, finish:'Std finish', qty:1 }, false); this.notify('Added to enquiry · ' + code); },
+    }));
+    const related = featured.filter(p => ['T-MSD35/I','J5C','HCC40A-14','KL-WS601'].includes(p.code));
+
+    const servicePromises = [
+      { icon: this.iconRef(I.shield), title:'Authorised distribution', body:'Genuine KinLong, supplied direct through the authorised channel.' },
+      { icon: this.iconRef(I.doc), title:'Specification support', body:'Load data, EN/CE certificates and CAD on every line.' },
+      { icon: this.iconRef(I.truck), title:'Project logistics', body:'Staged delivery to site against programme.' },
+      { icon: this.iconRef(I.box), title:'Trade & project terms', body:'Account pricing and dedicated supply terms.' },
+    ];
+    const utilityIcons = [
+      { icon: this.iconRef(I.pin), label:'Find a branch' },
+      { icon: this.iconRef(I.user), label:'Account' },
+      { icon: this.iconRef(I.globe), label:'EN · US' },
+    ].map(u => ({ ...u, onClick: () => this.go('home') }));
+
+    // ---- SEARCH AUTOCOMPLETE ----
+    const searchItems = [
+      { code:'MZS3208C', name:'Mortise Lever Handle Set', group:'Handles' },
+      { code:'T-MSD35/I', name:'Door Lock Body', group:'Locking Systems' },
+      { code:'J5C', name:'Pivot Hinge', group:'Hinges & Stays' },
+      { code:'HCC40A-14', name:'Friction Stay 14"', group:'Hinges & Stays' },
+      { code:'H50B', name:'Sliding Roller', group:'Sliding & Lift Systems' },
+      { code:'A250A2', name:'Spider Fitting', group:'Profiles & Point-Fixing' },
+      { code:'KL-WS601', name:'Neutral Silicone Sealant', group:'Sealants' },
+    ];
+    const q = (s.searchQuery || '').trim().toLowerCase();
+    const matches = (q ? searchItems.filter(it => (it.code + ' ' + it.name).toLowerCase().includes(q)) : searchItems).slice(0, 6);
+    const searchResults = matches.map(it => ({ ...it, onClick: () => { clearTimeout(this._blurT); this.setState({ searchQuery: it.code, searchFocused: false }); this.go('product'); } }));
+    const searchOpen = s.searchFocused && searchResults.length > 0;
+    const searchHeading = q ? (searchResults.length + ' result' + (searchResults.length === 1 ? '' : 's')) : 'Popular article numbers';
+
+    // ---- TABS ----
+    const tabDefs = [['overview','Overview'],['spec','Specifications'],['assurance','Assurance'],['downloads','Downloads']];
+    const tabs = tabDefs.map(([id,label]) => ({ label, active: s.activeTab === id, color: s.activeTab === id ? '#2D2D2D' : '#6B7177', onClick: () => this.setTab(id) }));
+    const dlList = [
+      ['Technical datasheet','PDF · 1.2 MB'],
+      ['CAD block (2D / 3D)','DWG · 340 KB'],
+      ['Installation guide','PDF · 2.1 MB'],
+      ['Declaration of performance','PDF · 180 KB'],
+    ].map(([label,meta]) => ({ label, meta, onClick: () => this.openDlModal(label) }));
+
+    const catMeta = [
+      ['handles','Handles','24 SKUs'],
+      ['hinges','Hinges & Stays','31 SKUs'],
+      ['locking','Locking Systems','22 SKUs'],
+      ['sliding','Sliding & Lift Systems','18 SKUs'],
+      ['profiles','Profiles & Point-Fixing','12 SKUs'],
+      ['sealants','Sealants','9 SKUs'],
+      ['closing','Door Closing','14 SKUs'],
+      ['fasteners','Fasteners & Consumables','22 SKUs'],
+    ];
+    const categoryTiles = catMeta.map((c,i)=>({
+      icon: this.iconRef(I[c[0]]), no: 'G'+String(i+1).padStart(2,'0'), label: c[1], count: c[2],
+      onClick: () => this.goCategory(c[1]),
+    }));
+
+    const valueProps = [
+      { icon:this.iconRef(I.architect), bg:'#FFFFFF', eyebrow:'Architects & Specifiers', title:'Specify with certainty', body:'Load ratings, EN/CE certifications and CAD blocks on every product — drop the right hardware straight into your detail.', cta:'Open Technical Library', onClick:()=>this.go('home') },
+      { icon:this.iconRef(I.contractor), bg:'#FFFFFF', eyebrow:'Contractors & Fabricators', title:'Match hardware to opening', body:'Size by panel weight and profile system. The Hardware Selector returns SKUs rated for your load.', cta:'Open Hardware Selector', onClick:()=>this.go('home') },
+      { icon:this.iconRef(I.dealer), bg:'#FFFFFF', eyebrow:'Wholesalers & Dealers', title:'Trade supply, KinLong direct', body:'Authorised distribution, trade terms and technical backing across the full KinLong range.', cta:'Become a dealer', onClick:()=>this.go('home') },
+    ];
+
+    const tools = [
+      { icon:this.iconRef(I.selector), title:'Hardware Selector', body:'Enter sash dimensions and material — get recommended SKUs by load capacity.', onClick:()=>this.go('home') },
+      { icon:this.iconRef(I.compat), title:'Compatibility Checker', body:'Pick a profile system or product and see every item that fits it.', onClick:()=>this.go('home') },
+      { icon:this.iconRef(I.library), title:'Technical Library', body:'Datasheets, CAD and certifications. Firm details unlock downloads.', onClick:()=>this.go('home') },
+    ];
+
+    // ---- PRODUCT data ----
+    const galleryId = 'nh-mzs-' + (s.galleryIndex);
+    const thumbs = [0,1,2,3].map(i => ({
+      id: 'nh-mzs-'+i,
+      onClick: () => this.setState({ galleryIndex:i }),
+      border: i === s.galleryIndex ? '#1A4480' : '#D8D8D8',
+      placeholder: i===3 ? 'Technical drawing' : ('Angle '+(i+1)),
+    }));
+
+    const keySpecs = [
+      { label:'Material', value:'SUS 304' },
+      { label:'Door weight', value:'≤ 80 kg' },
+      { label:'Standard', value:'EN 1906' },
+    ];
+
+    const finishSwatch = { 'Satin Steel':'#C9CCCE', 'Matt Black':'#25282B', 'Brushed Bronze':'#A9803F' };
+    const finishOpts = product.finishes.map(label => ({
+      label,
+      onClick: () => this.setState({ finish: label }),
+      border: s.finish === label ? '#1A4480' : '#D8D8D8',
+      bg: s.finish === label ? '#F4F5F7' : '#fff',
+      swatch: finishSwatch[label],
+    }));
+    const roseOpts = product.roses.map(label => ({
+      label,
+      onClick: () => this.setState({ rose: label }),
+      border: s.rose === label ? '#1A4480' : '#D8D8D8',
+      bg: s.rose === label ? '#F4F5F7' : '#fff',
+    }));
+
+    const certs = [
+      { code:'CE', desc:'Marked' },
+      { code:'EN 1906', desc:'Grade 3' },
+      { code:'ISO 9001', desc:'QMS' },
+      { code:'RoHS', desc:'Compliant' },
+    ];
+    const downloads = [
+      { label:'Datasheet (PDF)', icon:this.iconRef(I.pdf), onClick:()=>this.setState({basketOpen:true}) },
+      { label:'CAD block (DWG)', icon:this.iconRef(I.cad), onClick:()=>this.setState({basketOpen:true}) },
+    ];
+
+    const zebra = i => (i % 2 === 1 ? '#F8F9FB' : '#FFFFFF');
+    const mkGroup = (title, emph, rows) => ({
+      title, emphasised: emph,
+      border: emph ? '#1A4480' : '#D8D8D8',
+      headBg: emph ? '#1A4480' : '#F4F5F7',
+      headColor: emph ? '#FFFFFF' : '#2A2D30',
+      rows: rows.map((r,i)=>({ label:r[0], value:r[1], bg: zebra(i) })),
+    });
+    const specGroups = [
+      mkGroup('Identity', false, [
+        ['KinLong code','MZS3208C'],
+        ['Nippon / ERP code','NH-HDL-3208'],
+        ['Name','Mortise Lever Handle Set on Rose'],
+        ['Brand','KinLong'],
+        ['Category / sub','Handles / Door Lever Sets'],
+      ]),
+      mkGroup('Physical', false, [
+        ['Material','SUS 304 stainless steel'],
+        ['Finish / surface','Satin steel · PVD'],
+        ['Colour options','Satin · Matt black · Bronze'],
+        ['Dimensions','138 × 52 × 65 mm'],
+        ['Weight','0.74 kg / set'],
+      ]),
+      mkGroup('Performance', true, [
+        ['Door weight','≤ 80 kg'],
+        ['Cycle rating','200,000 cycles · Grade 3'],
+        ['Spindle','8 × 8 mm'],
+        ['Backset compatibility','35 / 40 / 45 mm'],
+        ['Lever return','Sprung · 35° throw'],
+      ]),
+      mkGroup('Compatibility', true, [
+        ['Application','Hinged door · interior / entrance'],
+        ['Profile system','60–80 mm door leaf'],
+        ['Door thickness','38 – 55 mm'],
+        ['Handedness','Reversible · non-handed'],
+        ['Pairs with','T-MSD35/I mortise lock body'],
+      ]),
+      mkGroup('Commercial', false, [
+        ['Unit','Set · pair + spindle + screws'],
+        ['MOQ','20 sets'],
+        ['Packaging','Carton of 20'],
+        ['Sales price','On request'],
+      ]),
+    ];
+
+    // ---- BASKET ----
+    const basket = s.basket.map((b,i) => ({
+      ...b,
+      dec: () => this.setItemQty(i, b.qty - 1),
+      inc: () => this.setItemQty(i, b.qty + 1),
+      remove: () => this.removeItem(i),
+    }));
+    const addCurrent = (open) => () => this.addToEnquiry({ code:product.code, name:product.name, finish:s.finish+' · '+s.rose, qty:s.qty });
+
+    // ---- PLP / CATALOGUE ----
+    const isPlp = s.screen === 'plp';
+    const activeFilters = Object.entries(s.plpFilters).flatMap(([k,vals]) => vals.map(v => ({ val:v, remove: () => this.toggleFilter(k,v) })));
+    let plpItems = this.catalogue.filter(p => Object.entries(s.plpFilters).every(([k,vals]) => vals.includes(p[k])));
+    if (s.plpSort === 'az') plpItems = plpItems.slice().sort((a,b)=>a.name.localeCompare(b.name));
+    else if (s.plpSort === 'code') plpItems = plpItems.slice().sort((a,b)=>a.code.localeCompare(b.code));
+    const plpProducts = plpItems.map((p,i) => ({
+      code:p.code, name:p.name, spec:p.spec, avail:p.avail,
+      availColor: p.avail === 'In stock' ? '#3F7A5B' : '#A9803F',
+      slotId: 'nh-plp-'+i,
+      onView: () => this.go('product'),
+      onAdd: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.addToEnquiry({ code:p.code, name:p.name, finish:p.finish, qty:1 }, false); this.notify('Added to enquiry · ' + p.code); },
+    }));
+    const plpFacets = this.plpFacets.map(([label,key,opts]) => ({
+      label, open: !!s.plpOpenFacets[label], sign: s.plpOpenFacets[label] ? '–' : '+',
+      onToggle: () => this.toggleFacet(label),
+      opts: opts.map(v => {
+        const checked = (s.plpFilters[key]||[]).includes(v);
+        return { label:v, onClick: () => this.toggleFilter(key,v),
+          count: this.catalogue.filter(p=>p[key]===v).length,
+          box: checked ? '#1A4480' : '#C4C4C4', boxBg: checked ? '#1A4480' : '#fff', tick: checked ? '✓' : '' };
+      }),
+    }));
+
+    return {
+      // header / nav
+      isHome: s.screen === 'home',
+      isProduct: s.screen === 'product',
+      navGroups, utilityNav, basketCount,
+      searchQuery: s.searchQuery,
+      onSearch: e => this.setState({ searchQuery: e.target.value, searchFocused: true }),
+      onSearchFocus: () => { clearTimeout(this._blurT); this.setState({ searchFocused: true }); },
+      onSearchBlur: () => { this._blurT = setTimeout(() => this.setState({ searchFocused: false }), 160); },
+      searchOpen, searchResults, searchHeading,
+      toast: s.toast,
+      hasToast: !!s.toast,
+      goHome: () => this.go('home'),
+      goProduct: () => this.go('product'),
+      toggleBasket: () => this.setState(st => ({ basketOpen: !st.basketOpen })),
+      navHover: { color:'#E2001A', boxShadow:'inset 0 -3px 0 #E2001A' },
+      utilHover: { color:'#E2001A' },
+      searchFocus: { borderColor:'#E2001A', boxShadow:'0 0 0 1px #E2001A' },
+      searchBtnHover: { background:'#E2001A' },
+      codeHover: { borderColor:'#E2001A', color:'#E2001A' },
+      tileHover: { background:'#fff', boxShadow:'0 4px 14px rgba(22,24,26,.10)' },
+      linkHover: { color:'#E2001A' },
+      addHover: { background:'#E2001A', borderColor:'#E2001A', color:'#fff' },
+      outlineNavyHover: { background:'#1A4480', borderColor:'#1A4480', color:'#fff' },
+      cardHover: { boxShadow:'0 4px 14px rgba(22,24,26,.10)' },
+      dlRowHover: { background:'#F8F9FB' },
+      searchRowHover: { background:'#F8F9FB' },
+      redBtnHover: { background:'#C00016' },
+      outlineDarkHover: { background:'#16181A', color:'#fff' },
+      toolHover: { background:'#2A2D30' },
+      dlHover: { borderColor:'#16181A' },
+
+      // plp / catalogue
+      isPlp, plpTitle: s.plpTitle,
+      goPlp: () => this.goCatalogue('Full catalogue'),
+      plpProducts, plpFacets, activeFilters,
+      plpCount: plpProducts.length,
+      plpHasFilters: activeFilters.length > 0,
+      plpHasResults: plpProducts.length > 0,
+      plpEmpty: plpProducts.length === 0,
+      clearFilters: () => this.clearFilters(),
+      plpSort: s.plpSort, onPlpSort: e => this.setPlpSort(e.target.value),
+      plpIsGrid: s.plpView === 'grid',
+      setGridView: () => this.setPlpView('grid'),
+      setListView: () => this.setPlpView('list'),
+      facetCheckHover: { borderColor:'#1A4480' },
+      chipHover: { background:'#163A6E' },
+
+      // home
+      quickCodes, categoryTiles, valueProps, tools, featured, servicePromises, utilityIcons,
+      megaOpen: s.hoveredNav != null,
+      hoveredGroup, hoveredSubs,
+      navLeaveSoon: () => this.navLeaveSoon(),
+      keepMega: () => this.keepMega(),
+      closeMega: () => this.closeMega(),
+
+      // product
+      product,
+      galleryId, galleryLabel: s.galleryIndex===3 ? 'TECHNICAL DRAWING' : ('VIEW 0'+(s.galleryIndex+1)),
+      galleryPlaceholder: s.galleryIndex===3 ? 'Drop technical drawing' : ('Drop product image · angle '+(s.galleryIndex+1)),
+      thumbs, keySpecs,
+      finish: s.finish, finishOpts,
+      rose: s.rose, roseOpts,
+      qty: s.qty,
+      onQtyInput: e => this.setQtyInput(e.target.value),
+      decQty: () => this.setState(st => ({ qty: Math.max(1, st.qty - 1) })),
+      incQty: () => this.setState(st => ({ qty: st.qty + 1 })),
+      lightboxOpen: s.lightboxOpen,
+      openLightbox: () => this.openLightbox(),
+      closeLightbox: () => this.closeLightbox(),
+      addProduct: addCurrent(true),
+      addProductQuote: addCurrent(true),
+      certs, downloads, checkIcon: this.iconRef(I.check),
+      specGroups,
+      tabs, related,
+      isTabOverview: s.activeTab === 'overview',
+      isTabSpec: s.activeTab === 'spec',
+      isTabAssurance: s.activeTab === 'assurance',
+      isTabDownloads: s.activeTab === 'downloads',
+      dlList,
+      truckIcon: this.iconRef(I.truck), clockIcon: this.iconRef(I.clock), boxIcon: this.iconRef(I.box),
+      downloadIcon: this.iconRef(I.download), lockIcon: this.iconRef(I.lock),
+      arrowUpIcon: this.iconRef(I.arrowUp),
+      stickyVisible: s.stickyVisible,
+      backToTop: () => { try { window.scrollTo({ top:0, behavior:'smooth' }); } catch(e){ window.scrollTo(0,0); } },
+      // download gate modal
+      dlModalOpen: s.dlModalOpen,
+      dlTarget: s.dlTarget,
+      dlSubmitted: s.dlSubmitted,
+      dlNotSubmitted: !s.dlSubmitted,
+      dlForm: s.dlForm,
+      onDlName: e => this.setState(st => ({ dlForm:{...st.dlForm, name:e.target.value} })),
+      onDlFirm: e => this.setState(st => ({ dlForm:{...st.dlForm, firm:e.target.value} })),
+      onDlEmail: e => this.setState(st => ({ dlForm:{...st.dlForm, email:e.target.value} })),
+      closeDlModal: () => this.closeDlModal(),
+      submitDl: () => this.submitDl(),
+      // footer newsletter
+      newsletterEmail: s.newsletterEmail,
+      onNewsletter: e => this.setState({ newsletterEmail: e.target.value }),
+      subscribeNewsletter: () => this.setState({ newsletterDone:true }),
+      newsletterDone: s.newsletterDone,
+      newsletterNotDone: !s.newsletterDone,
+
+      // basket drawer
+      basketOpen: s.basketOpen,
+      basketEmpty: s.basket.length === 0,
+      basketHasItems: s.basket.length > 0,
+      basket,
+      submitted: s.submitted,
+      notSubmitted: !s.submitted,
+      form: s.form,
+      onFormName: e => this.setState(st => ({ form:{...st.form, name:e.target.value} })),
+      onFormFirm: e => this.setState(st => ({ form:{...st.form, firm:e.target.value} })),
+      onFormRole: e => this.setState(st => ({ form:{...st.form, role:e.target.value} })),
+      onFormProject: e => this.setState(st => ({ form:{...st.form, project:e.target.value} })),
+      errName: s.formErrors.name, errFirm: s.formErrors.firm, errRole: s.formErrors.role,
+      hasErrName: !!s.formErrors.name, hasErrFirm: !!s.formErrors.firm, hasErrRole: !!s.formErrors.role,
+      fieldBorder: { name: s.formErrors.name ? '#A4472F' : '#C4C4C4', firm: s.formErrors.firm ? '#A4472F' : '#C4C4C4', role: s.formErrors.role ? '#A4472F' : '#C4C4C4' },
+      dlErrName: s.dlErrors.name, dlErrFirm: s.dlErrors.firm, dlErrEmail: s.dlErrors.email,
+      hasDlErrName: !!s.dlErrors.name, hasDlErrFirm: !!s.dlErrors.firm, hasDlErrEmail: !!s.dlErrors.email,
+      dlFieldBorder: { name: s.dlErrors.name ? '#A4472F' : '#C4C4C4', firm: s.dlErrors.firm ? '#A4472F' : '#C4C4C4', email: s.dlErrors.email ? '#A4472F' : '#C4C4C4' },
+      submitEnquiry: () => this.submitEnquiry(),
+    };
+  }
+}
+</script>
+</body>
+</html>

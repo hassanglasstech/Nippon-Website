@@ -1,0 +1,10 @@
+# backups
+*.bak
+*.phase0.bak
+
+# OS / editor cruft
+Thumbs.db
+.DS_Store
+
+# local preview server config (machine-specific)
+.claude/launch.json
